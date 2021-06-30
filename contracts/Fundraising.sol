@@ -18,11 +18,11 @@ contract Fundraising {
         uint256 amountFunded;
     }
 
-    event Donation(address donator, uint256 fundraiseId, uint256 donationAmount);
-    event FundraiseCreated(address fundraiser, address beneficiary, uint256 fundraiseGoal, uint256 fundraiseDeadline);
-    event BeneficiaryChanged(uint256 fundraiseId, address newBeneficiary);
-    event FundraiseComplete(uint256 fundraiseId, address beneficiary);
-    event DonationClaimed(uint256 fundraiseId, address claimer, uint256 claimAmount);
+    event Donation(address indexed donator, uint256 indexed fundraiseId, uint256 donationAmount);
+    event FundraiseCreated(address indexed fundraiser, address indexed beneficiary, uint256 fundraiseGoal, uint256 fundraiseDeadline, uint256 indexed fundraiseId, string fundraiseAgenda);
+    event BeneficiaryChanged(uint256 indexed fundraiseId, address indexed newBeneficiary);
+    event FundraiseComplete(uint256 indexed fundraiseId, address indexed beneficiary);
+    event DonationClaimed(uint256 indexed fundraiseId, address indexed claimer, uint256 claimAmount);
 
     Fundraise[] allFundraises;
 
@@ -59,14 +59,15 @@ contract Fundraising {
         fundraise.amountFunded = fundraise.amountFunded.add(msg.value); // increase amountFunded to Donation
         donatorToDonation[fundraiseId][msg.sender] = donatorToDonation[fundraiseId][msg.sender].add(msg.value);
         donatorToFundraise[msg.sender].push(fundraiseId); // if a person donates 2 times then 2 id's are added.
-        emit Donation(msg.sender, fundraiseId, msg.value);
+        emit Donation(fundraiseId, msg.sender, fundraiseId, msg.value);
     }
 
     function createFundraise(address beneficiary, uint256 fundraiseGoal, string memory fundraiseAgenda, uint256 fundraiseDeadline) external {
         Fundraise memory fundraise = Fundraise(msg.sender, beneficiary, fundraiseGoal, block.timestamp, fundraiseDeadline, fundraiseAgenda, 0);
         allFundraises.push(fundraise);
-        fundraiserToFundraise[msg.sender].push(allFundraises.length - 1);
-        emit FundraiseCreated(msg.sender, beneficiary, fundraiseGoal, fundraiseDeadline);
+        uint256 fundraiseId = allFundraises.length - 1;
+        fundraiserToFundraise[msg.sender].push(fundraiseId);
+        emit FundraiseCreated(msg.sender, beneficiary, fundraiseGoal, fundraiseDeadline, fundraiseId, fundraiseAgenda);
     } 
 
     function getBeneficiary(uint256 fundraiseId) external view returns(address) {
@@ -85,14 +86,15 @@ contract Fundraising {
     }
 
     function claimFundraised(uint256 fundraiseId) onlyBeneficiary(fundraiseId) afterDeadline(fundraiseId) external {
-        Fundraise memory fundraise = allFundraises[fundraiseId];
+        Fundraise storage fundraise = allFundraises[fundraiseId];
         require(fundraise.fundraiseGoal.sub(fundraise.amountFunded) == 0, "Fundraise was a failure cannot claim funds");
         payable(fundraise.beneficiary).transfer(fundraise.fundraiseGoal);
+        fundraise.fundraiseGoal = fundraise.fundraiseGoal.sub(fundraise.amountFunded);
         emit FundraiseComplete(fundraiseId, fundraise.beneficiary);
     }
 
     function claimDonation(uint256 fundraiseId) afterDeadline(fundraiseId) external {
-        Fundraise memory fundraise = allFundraises[fundraiseId];
+        Fundraise storage fundraise = allFundraises[fundraiseId];
         uint256 donationAmount = donatorToDonation[fundraiseId][msg.sender];
         require(donationAmount > 0, "No Donation made");
         require(fundraise.fundraiseGoal.sub(fundraise.amountFunded) > 0, "Fundraise was a success cannot claim donation");
