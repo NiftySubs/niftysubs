@@ -1,4 +1,64 @@
 .sidepanel{
-    background-color: lightgray;
-    
+    background-color: #EFEFF1;
+    width: 20vw;
+    height: calc(100vh-50px);
+    padding: 16px;
+}
+.sidepaneltitle{
+    font-size: 16px;
+    padding: 8px 0;
+    font-weight: 600;
+}
+.mainpanel{
+    width:70vw;
+
+}
+.artist{
+    display: flex;
+    justify-content: space-between;
+}
+.artistname{
+    font-size: 14px;
+    color:#1F1F23;
+}
+.category{
+    font-size:13px;
+    color:#53535F;
+}
+.watchcount{
+    font-size: 12px;
+    color:#1F1F23;
+}
+.showmore{
+    padding: 16px 0;
+    color:#E6017A;
+    font-size:12px;
+}
+
+.joincard{
+    padding: 2vw;
+    margin: 32px 8px;
+    background-color: #fff;
+    border-radius:6px;
+}
+.connectbuttoncard{
+    padding: 8px;
+    background-color:rgba(230,1,122,0.08);
+    color: #E6017A;
+    font-size: 13px;
+    width: 120px;
+    border-radius:4px;
+    text-align: center;
+}
+.cardsubtitle{
+    margin: 10px 0;
+    font-size: 13px;
+
+}
+.titlecardhighlight{
+    color: #E6017A;
+}
+.cardtitle{
+    font-size: 24px;
+    font-weight: 600;
 }
