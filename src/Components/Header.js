@@ -1,18 +1,18 @@
 import "./Components.css";
-import niftysubs from '../assets/niftysubs.svg'
+import niftysubs from '../assets/niftysubs.svg';
+import { Button, HStack, Text } from "@chakra-ui/react";
 function Header() {
   return (
-    <div className="Header">
+    <HStack padding={3} className="Header">
       <div className="headercomp">
         <img className="headerlogo" src={niftysubs} alt="Niftysubs Logo"></img>
-
-        <div>Browse</div>
+        <Button variant="ghost">Browse</Button>
       </div>
       <div></div>
       <div className="headercomp">
-        <div className="connectbuttoncard">Connect Wallet</div>
+        <Button alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Connect Wallet</Button>
       </div>
-    </div>
+    </HStack>
   );
 }
 

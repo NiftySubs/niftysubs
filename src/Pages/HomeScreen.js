@@ -3,6 +3,7 @@ import "./HomeScreen.css";
 import c2c from "../assets/c2caftermovie.mp4";
 import dummyimage from "../assets/rishabh-profile.jpg";
 import icons from "./socialicondata";
+import { Button, Heading, VStack, HStack, Box, Flex, Spacer } from "@chakra-ui/react";
 
 const IconComponent = ({ src, link, name }) => {
   return (
@@ -20,10 +21,10 @@ export default function HomeScreen() {
   return (
     <div className="HomeScreen">
       <Header />
-      <article className="MainSectionHome">
+      <HStack spacing={0} className="MainSectionHome">
         <section className="sidepanel">
           <div className="sidepaneltitle">Recommended Channels</div>
-          <div className="artists">
+          <VStack alignContent="flex-start" spacing={3} className="artists">
             <div className="artist">
               <div>
                 <div className="artistname">KasparvoChess</div>
@@ -52,21 +53,21 @@ export default function HomeScreen() {
               </div>
               <div className="watchcount">🔴 17.3K</div>
             </div>
-          </div>
+          </VStack>
           <div className="showmore">Show More</div>
-          <div className="joincard">
+          <VStack spacing={3} className="joincard">
             <div className="cardtitle">
               Join the <span className="titlecardhighlight">niftysubs</span>{" "}
               community!
             </div>
-            <div className="cardsubtitle">
+            <Heading as="h5" fontSize={13} className="cardsubtitle">
               Discover the best live streams anywhere.
-            </div>
-            <div className="connectbuttoncard">Connect Wallet</div>
-          </div>
+            </Heading>
+            <Button alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Connect Wallet</Button>
+          </VStack>
         </section>
-        <section className="mainsection">
-          <section className="videosection">
+        <HStack backgroundColor="#EFEFF1" height="100%" className="mainsection">
+          <VStack overflowY="scroll" height="100%" className="videosection">
             <div className="window__frame__image">
               <video
                 className="video-border"
@@ -77,17 +78,18 @@ export default function HomeScreen() {
                 muted
                 src={c2c}
                 type="video/mp4"
+                width="100%"
               />
             </div>
-            <div className="videoinfo">
-              <div className="videocreatorimage">
+            <HStack spacing={5} className="videoinfo">
+              <Flex className="videocreatorimage" justifySelf="flex-start" justifyContent="flex-start" alignContent="flex-start">
                 <img
                   className="creatorimage"
                   src={dummyimage}
                   alt="creator profile"
                 />
-              </div>
-              <div className="videodetails">
+              </Flex>
+              <VStack justifyContent="flex-start" alignItems="flex-start" className="videodetails">
                 <div className="creatorname">KasparvoChess</div>
                 <div className="videotitle">
                   Grand Chess Tour 2021 - Paris Rapid Day 3 | kasparovchess.com
@@ -97,11 +99,12 @@ export default function HomeScreen() {
                   <div className="genrelanguage">English</div>
                   <div className="genretype">Strategy</div>
                 </div>
-              </div>
-              <div className="startarea">
-                <div className="subscribebutton">Subscribe</div>
-              </div>
-            </div>
+              </VStack>
+              <Spacer/>
+              <HStack alignItems="center" justifyContent="center" justifyItems="center" justifySelf="center" alignSelf="center" alignContent="center">
+                <Button className="subscribebutton" leftIcon={<img width="10px" height="10px" src="https://gblobscdn.gitbook.com/spaces%2F-MKEcOOf_qoYMObicyRu%2Favatar-1603361891616.png?alt=media" />}>Subscribe</Button>
+              </HStack>
+            </HStack>
             <div className="creatordetails">
               <div>
                 <img
@@ -129,10 +132,10 @@ export default function HomeScreen() {
                 </div>
               </div>
             </div>
-          </section>
+          </VStack>
           <section className="chatsection"></section>
-        </section>
-      </article>
+        </HStack>
+      </HStack>
     </div>
   );
 }

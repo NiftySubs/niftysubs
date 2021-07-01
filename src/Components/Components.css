@@ -1,8 +1,8 @@
 .Header{
     display: flex;
     flex-direction: row;
-    height: 50px;
-    max-height: 50px;
+    height: 65px;
+    max-height: 65px;
     padding: 8px;
     align-items: center;
     justify-content: space-between;

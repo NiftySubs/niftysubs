@@ -1,17 +1,19 @@
 .MainSectionHome{
     display: flex;
     flex-direction: row;
+    height: calc(100vh - 65px);
 }
 .sidepanel{
     background-color: #EFEFF1;
     width: 20vw;
-    height: calc(100vh-50px);
+    height: 100%;
     padding: 16px;
 }
 .sidepaneltitle{
     font-size: 16px;
     padding: 8px 0;
     font-weight: 600;
+    text-align: left;
 }
 .mainpanel{
     width:70vw;
@@ -20,6 +22,7 @@
 .artist{
     display: flex;
     justify-content: space-between;
+    width: 100%;
 }
 .artistname{
     font-size: 14px;
@@ -28,6 +31,7 @@
 .category{
     font-size:13px;
     color:#53535F;
+    text-align: left;
 }
 .watchcount{
     font-size: 12px;
@@ -57,7 +61,7 @@
 .cardsubtitle{
     margin: 10px 0;
     font-size: 13px;
-
+    text-align: left;
 }
 .titlecardhighlight{
     color: #E6017A;
@@ -65,29 +69,36 @@
 .cardtitle{
     font-size: 24px;
     font-weight: 600;
+    text-align: left    ;
 }
-.mainsection{
+/* .mainsection{
     width:80vw;
+    height: 100%;
     display: flex;
     flex-direction: row;
+} */
+
+.window__frame__image {
+    width: 100%;
 }
 .videosection{
-    width:50vw;
+    width:60vw;
 }
 .chatsection{
-    width:30vw;
+    width:20vw;
 }
 .videoinfo{
     display:flex;
-    padding: 8px;
+    padding: 15px;
+    width: 100%;
 }
 .creatorimage{
-    width: 50px;
-    height:50px;
-    border-radius: 25px;
+    width: 90px;
+    height:90px;
+    border-radius: 50%;
 }
 .creatorname{
-
+    text-align: left;
 }
 .videotitle{
     font-size: 14px;
@@ -98,7 +109,7 @@
     flex-direction: row;
 }
 .videodetails{
-    padding: 0 16px;
+    align-items: flex-start;
 }
 .genrecategory{
     color:#E6017A;
@@ -124,13 +135,6 @@
     align-items: center;
 }
 .subscribebutton{
-    width: 150px;
-    padding: 8px;
-    background-color: #8884FF;
-    border-radius: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 .videosection{
     background-color: #F7F7F8;
