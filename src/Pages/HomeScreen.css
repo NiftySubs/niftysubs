@@ -1,3 +1,24 @@
+
+body::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+
+body::-webkit-scrollbar {
+    width: 5px; 
+}
+
+
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+    background: rgba(80,80,80, .2); 
+    border-radius: 60px;
+}
+
+/* Handle on hover */
+body::-webkit-scrollbar-thumb:hover {
+    background: rgba(80,80,80, .6); 
+}  
 .MainSectionHome{
     display: flex;
     flex-direction: row;
@@ -134,7 +155,8 @@
     justify-content: center;
     align-items: center;
 }
-.subscribebutton{
+.subscribebutton:hover{
+    background: black !important;
 }
 .videosection{
     background-color: #F7F7F8;
