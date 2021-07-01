@@ -1,3 +1,7 @@
+.MainSectionHome{
+    display: flex;
+    flex-direction: row;
+}
 .sidepanel{
     background-color: #EFEFF1;
     width: 20vw;
@@ -61,4 +65,220 @@
 .cardtitle{
     font-size: 24px;
     font-weight: 600;
+}
+.mainsection{
+    width:80vw;
+    display: flex;
+    flex-direction: row;
+}
+.videosection{
+    width:50vw;
+}
+.chatsection{
+    width:30vw;
+}
+.videoinfo{
+    display:flex;
+    padding: 8px;
+}
+.creatorimage{
+    width: 50px;
+    height:50px;
+    border-radius: 25px;
+}
+.creatorname{
+
+}
+.videotitle{
+    font-size: 14px;
+    padding: 0 0 4px 0;
+}
+.videogenre{
+    display: flex;
+    flex-direction: row;
+}
+.videodetails{
+    padding: 0 16px;
+}
+.genrecategory{
+    color:#E6017A;
+    font-size: 13px;
+    margin: 0 8px 0 0;
+    width:40px;
+    text-align: center;
+        padding: 4px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.genrelanguage,.genretype{
+    background-color: rgba(0,0,0,0.05);
+    font-size: 13px;
+    margin:0 8px;
+        width:80px;
+    text-align: center;
+    border-radius: 900px;
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.subscribebutton{
+    width: 150px;
+    padding: 8px;
+    background-color: #8884FF;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.videosection{
+    background-color: #F7F7F8;
+}
+.creatordetails{
+    display: flex;
+    background-color: rgb(158, 158, 158);
+    margin: 20px 8px;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.creatorprofile{
+    width: 80px;
+    height:80px;
+    border-radius: 40px;
+}
+.creatorprofiledesc{
+    padding: 0 16px;
+    font-weight: 600;
+    color: #ededed;
+}
+.creatortitle{
+    font-size: 24px;
+}
+
+.socialiconcontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.mainIcon > img {
+  margin: 6px;
+}
+  .logos {
+    transform: scale(1);
+  }
+
+@media screen and (min-width: 500px) and (max-width: 600px) {
+  .mainIcon > img {
+    height: 16px;
+    width: 16px;
+    margin: 0 0.2rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mainIcon > img {
+    height: 16px;
+    width: 16px;
+    margin: 0 0.1rem;
+  }
+
+  .footer > a {
+    transform: scale(0.8);
+  }
+}
+
+@media screen and (min-width: 600px) {
+.social-box {border-style: solid;
+border-color: black;
+color: black;
+margin-right: 12px;
+background-size: 200% 200%;
+background-image: 
+linear-gradient(to top, #A72424 50%, transparent 50%);
+-webkit-transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+-moz-transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+-ms-transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+-o-transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+
+}
+
+.social-box:hover {color: white;
+border-color: #A72424;
+background-image: 
+linear-gradient(to top, #A72424 51%, transparent 50%);
+background-position: 0 100%;
+-webkit-transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+-moz-transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+-ms-transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+-o-transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+transition: background-position 300ms, color 300ms ease, border-color 300ms ease;
+}
+
+.fb{
+background-image: 
+linear-gradient(to top, #4267B2 50%, transparent 50%);
+
+}
+.fb:hover{
+border-color: #4267B2;
+background-image: 
+linear-gradient(to top, #4267B2 51%, transparent 50%);
+}
+
+.twitter{
+background-image: 
+linear-gradient(to top, #1DA1F2 50%, transparent 50%);
+
+}
+.twitter:hover{
+  border-color: #1DA1F2;
+background-image: 
+linear-gradient(to top, #1DA1F2 51%, transparent 50%);
+
+}
+
+.insta{
+  background-image: 
+linear-gradient(to top, #D64785 50%, transparent 50%);
+
+}
+
+.insta:hover{
+  border-color: #D64785;
+background-image: 
+linear-gradient(to top, #D64785 51%, transparent 50%);
+
+}
+.linkedin{
+  background-image: 
+linear-gradient(to top, #007AB2 50%, transparent 50%);
+
+}
+.linkedin:hover{
+  border-color: #007AB2;
+background-image: 
+linear-gradient(to top, #007AB2 51%, transparent 50%);
+
+}
+.medium{
+  background-image: 
+linear-gradient(to top, #3CB371 50%, transparent 50%);
+
+}
+.medium:hover{
+  border-color: #3CB371;
+background-image: 
+linear-gradient(to top, #3CB371 51%, transparent 50%);
+
+}
 }
