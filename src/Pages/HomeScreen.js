@@ -4,6 +4,8 @@ import c2c from "../assets/c2caftermovie.mp4";
 import dummyimage from "../assets/rishabh-profile.jpg";
 import icons from "./socialicondata";
 import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text } from "@chakra-ui/react";
+import ChatInterface from "../Components/ChatInterface.js";
+import { useState, useEffect } from "react";
 
 const IconComponent = ({ src, link, name }) => {
   return (
@@ -18,41 +20,41 @@ const IconComponent = ({ src, link, name }) => {
   );
 };
 export default function HomeScreen() {
+
+  const [currentAccount, setCurrentAccount] = useState(undefined);
+
+  useEffect(() => {
+    console.log("App Ready!");
+  },[])
+
   return (
     <div className="HomeScreen">
-      <Header />
+      <Header currentAccountSetter={setCurrentAccount} currentAccount={currentAccount} />
       <HStack spacing={0} className="MainSectionHome">
         <section className="sidepanel">
           <Heading as="h4" fontSize={15} className="sidepaneltitle">Recommended Channels</Heading>
-          <VStack alignContent="flex-start" spacing={3} className="artists">
-            <div className="artist">
-              <div>
-                <div className="artistname">KasparvoChess</div>
-                <div className="category">Chess</div>
-              </div>
+          <VStack marginTop={3} alignContent="flex-start" spacing={3} className="artists">
+            <HStack className="artist">
+              <VStack alignItems="flex-start" alignContent="flex-start">
+                <Text className="artistname">KasparvoChess</Text>
+                <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">Chess</Tag>
+              </VStack>
               <div className="watchcount">🔴 17.3K</div>
-            </div>
-            <div className="artist">
-              <div>
-                <div className="artistname">KasparvoChess</div>
-                <div className="category">Just Chatting</div>
-              </div>
+            </HStack>
+            <HStack className="artist">
+              <VStack alignItems="flex-start" alignContent="flex-start">
+                <Text className="artistname">KasparvoChess</Text>
+                <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">Sports</Tag>
+              </VStack>
               <div className="watchcount">🔴 17.3K</div>
-            </div>
-            <div className="artist">
-              <div>
-                <div className="artistname">KasparvoChess</div>
-                <div className="category">Minecraft</div>
-              </div>
+            </HStack>
+            <HStack className="artist">
+              <VStack alignItems="flex-start" alignContent="flex-start">
+                <Text className="artistname">KasparvoChess</Text>
+                <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">Gaming</Tag>
+              </VStack>
               <div className="watchcount">🔴 17.3K</div>
-            </div>
-            <div className="artist">
-              <div>
-                <div className="artistname">KasparvoChess</div>
-                <div className="category">Fortnite</div>
-              </div>
-              <div className="watchcount">🔴 17.3K</div>
-            </div>
+            </HStack>
           </VStack>
           <div className="showmore">Show More</div>
           <VStack spacing={3} className="joincard">
@@ -63,10 +65,10 @@ export default function HomeScreen() {
             <Heading as="h5" fontSize={13} className="cardsubtitle">
               Discover the best live streams anywhere.
             </Heading>
-            <Button alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Connect Wallet</Button>
+            {/* <Button alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Connect Wallet</Button> */}
           </VStack>
         </section>
-        <HStack backgroundColor="#EFEFF1" height="100%" className="mainsection">
+        <HStack width="80vw" alignItems="flex-start" backgroundColor="#EFEFF1" height="100%" className="mainsection">
           <VStack overflowY="scroll" height="100%" className="videosection">
             <div className="window__frame__image">
               <video
@@ -92,7 +94,7 @@ export default function HomeScreen() {
                 </Box>
               </Flex>
               <VStack justifyContent="flex-start" alignItems="flex-start" className="videodetails">
-                <div className="creatorname">KasparvoChess</div>
+                <Heading as="h6" fontSize="20px" className="creatorname">KasparvoChess</Heading>
                 <Text className="videotitle">
                   Grand Chess Tour 2021 - Paris Rapid Day 3 | kasparovchess.com
                 </Text>
@@ -104,7 +106,7 @@ export default function HomeScreen() {
               </VStack>
               <Spacer/>
               <HStack alignItems="center" justifyContent="center" justifyItems="center" justifySelf="center" alignSelf="center" alignContent="center">
-                <Button className="subscribebutton" backgroundColor="black"  color="white" leftIcon={<Image backgroundColor="white" borderRadius="2px" width="20px" height="20px" src="https://gblobscdn.gitbook.com/spaces%2F-MKEcOOf_qoYMObicyRu%2Favatar-1603361891616.png?alt=media" />}>Start Watching</Button>
+                <Button borderStyle="solid" borderWidth="1px" borderColor="black" className="subscribebutton" backgroundColor="white"  color="black" leftIcon={<Image backgroundColor="transparent" borderRadius="2px" width="20px" height="20px" src="https://gblobscdn.gitbook.com/spaces%2F-MKEcOOf_qoYMObicyRu%2Favatar-1603361891616.png?alt=media" />}>Start Watching</Button>
               </HStack>
             </HStack>
             {/* <div className="creatordetails">
@@ -135,7 +137,7 @@ export default function HomeScreen() {
               </div>
             </div> */}
           </VStack>
-          <section className="chatsection"></section>
+          <ChatInterface />
         </HStack>
       </HStack>
     </div>
