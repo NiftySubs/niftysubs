@@ -1,0 +1,19 @@
+.Header{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    max-height: 50px;
+    padding: 8px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+}
+.headercomp{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.headerlogo{
+    margin-right: 16px;
+}

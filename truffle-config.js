@@ -72,6 +72,7 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+<<<<<<< HEAD
     rinkeby: {
       provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/514596f7df754ad69211f19bb1d64539`),
       network_id: 4,       // Ropsten's id
@@ -85,6 +86,8 @@ module.exports = {
         port:"7545",
         host: "127.0.0.1"
     } 
+=======
+>>>>>>> rishabh
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -95,7 +98,11 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
+<<<<<<< HEAD
       version: "0.8.0",    // Fetch exact version from solc-bin (default: truffle's version)
+=======
+      // version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
+>>>>>>> rishabh
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
@@ -115,11 +122,14 @@ module.exports = {
 
   db: {
     enabled: false
+<<<<<<< HEAD
   },
   plugins: [
     'truffle-plugin-verify'
   ],
   api_keys: {
     etherscan: process.env.ETHERSCAN_API_KEY
+=======
+>>>>>>> rishabh
   }
 };
