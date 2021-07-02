@@ -1,3 +1,4 @@
+ 
 .MainSectionHome{
     display: flex;
     flex-direction: row;
@@ -45,7 +46,7 @@
 
 .joincard{
     padding: 2vw;
-    margin: 32px 8px;
+    margin: 32px 0px;
     background-color: #fff;
     border-radius:6px;
 }
@@ -134,7 +135,8 @@
     justify-content: center;
     align-items: center;
 }
-.subscribebutton{
+.subscribebutton:hover{
+    background: black !important;
 }
 .videosection{
     background-color: #F7F7F8;
