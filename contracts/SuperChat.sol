@@ -1,4 +1,4 @@
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 contract SuperChat {
@@ -11,7 +11,7 @@ contract SuperChat {
         string videoId;
     }
 
-    event SuperChatEvent(address sender, address receiver, uint256 amount, string message);
+    event SuperChatEvent(address indexed sender, address indexed receiver, uint256 amount, string message);
     mapping(address => uint256[]) superchatPaidMapping;
     mapping(address => uint256[]) superchatReceivedMapping;
 
