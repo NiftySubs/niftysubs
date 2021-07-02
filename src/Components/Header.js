@@ -16,7 +16,6 @@ function Header({ currentAccountSetter, currentAccount }) {
       setIsMetamaskInstalled(true);  
       let svg = svgAvatarGenerator(currentAccount, {dataUri: true});
       setAvatar(svg);
-      console.log(svg);
       window.ethereum.on("accountsChanged", (accounts) => {
         currentAccountSetter(accounts[0]);
       })
