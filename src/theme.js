@@ -17,6 +17,16 @@ const theme = extendTheme({
                 background: "rgba(230,1,122,0.08)",
                 color: "#E6017A"
             }
+        },
+        Button: {
+            baseStyle: {
+                fontFamily: "Inter"
+            }
+        },
+        Heading: {
+            baseStyle: {
+                fontFamily: "Inter"
+            }
         }
     }
 });

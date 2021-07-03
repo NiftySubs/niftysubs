@@ -1,8 +1,17 @@
 import "./Components.css";
 import niftysubs from '../assets/niftysubs.svg';
-import { Button, HStack, Text, Tag, TagLabel, Avatar, interactivity } from "@chakra-ui/react";
+import { 
+  Button, 
+  HStack, 
+  Text, 
+  Tag, 
+  TagLabel, 
+  Avatar,
+  Spacer 
+} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import svgAvatarGenerator from "../utils/avatar";
+import { Link } from "react-router-dom";
 
 
 function Header({ currentAccountSetter, currentAccount }) {
@@ -37,10 +46,11 @@ function Header({ currentAccountSetter, currentAccount }) {
   return (
     <HStack padding={3} className="Header">
       <div className="headercomp">
-        <img className="headerlogo" src={niftysubs} alt="Niftysubs Logo"></img>
+        <Link to="/"><img className="headerlogo" src={niftysubs} alt="Niftysubs Logo"></img></Link>
         <Button variant="ghost">Browse</Button>
       </div>
-      <div></div>
+      <Spacer />
+      <Link to="/dashboard"><Button variant="ghost">Dashboard</Button></Link>
       <div className="headercomp">
         {
           isMetamaskInstalled ? 

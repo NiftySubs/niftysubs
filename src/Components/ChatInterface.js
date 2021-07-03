@@ -1,4 +1,4 @@
-import { VStack, Input, HStack, Text, Button, Spacer, Box, Tag, Avatar, Flex, Image, useToast } from "@chakra-ui/react";
+import { VStack, Input, HStack, Text, Button, Spacer, Box, Tag, Avatar, Flex, Image, useToast, FormControl, Form } from "@chakra-ui/react";
 import seedColor from "seed-color";
 import OrbitDb, { Identities } from "orbit-db";
 import { create } from "ipfs-http-client";
@@ -9,9 +9,11 @@ import svgAvatarGenerator from "../utils/avatar";
 import Web3 from "web3";
 import SuperchatABI from "../abis/superChat";
 
+
 var orbitdb;
 var db;
 var pubsub;
+var web3;
 
 function ChatInterface({ currentAccount, isLocked }) {
     const toast = useToast();
@@ -22,8 +24,8 @@ function ChatInterface({ currentAccount, isLocked }) {
     const [ topic, setTopic ] = useState("video");
     const [ superchatContractAddress, setSuperchatContractAddress ] = useState("0xE85b157E7685Ce6Bc35fd33c1dfb7E887E7470AF");
     const [ superchatContract, setSuperchatContract ] = useState("");
-    const [ web3, setWeb3 ] = useState();
     const [ isSuperChatting, setIsSuperChatting ] = useState(false);
+    const [ superChatValue, setSuperChatValue ] = useState("0");
 
     useEffect(() => {
         
@@ -39,16 +41,16 @@ function ChatInterface({ currentAccount, isLocked }) {
     }, [messages, isLocked]);
 
     const init = async () => {
+        web3 = new Web3(window.ethereum);
+        let superchatContractObj = new web3.eth.Contract(SuperchatABI, superchatContractAddress);
+        setSuperchatContract(superchatContractObj);
+        
         const ipfs = create("http://localhost:5001/");
         orbitdb = await OrbitDb.createInstance(ipfs);
         db = await orbitdb.docs("niftysubs");
         pubsub = new IPFSpubsub(ipfs, "niftysubs");
-        // initDb();
-        let web3 = new Web3(window.ethereum);
-        setWeb3(web3);
-        let superchatContractObj = new web3.eth.Contract(SuperchatABI, superchatContractAddress);
-        setSuperchatContract(superchatContractObj);
         subscribeToTopic();
+        // initDb();
     } 
 
     const subscribeToTopic = async () => {
@@ -90,36 +92,49 @@ function ChatInterface({ currentAccount, isLocked }) {
         setMessage(target.value);
     } 
 
+    const handleSuperChatValue = ({ target }) => {
+        setSuperChatValue(target.value);
+    }
+
     const sendMessage = async () => {
         let newMessage = await pubsub.publish(topic, { _id: uuidv4(), message: message, sender: currentAccount, isSuperChat: false, value: 0 });
         setMessage("");
     }
 
     const sendSuperChat = async () => {
-        setIsSuperChatting(true);
-        let weiAmount = web3.utils.toWei("0.001", "ether");
-        superchatContract.methods.superChat("", weiAmount, message, uuidv4()).send({ from: currentAccount, value: weiAmount })
-        .on("transactionHash", (hash) => {
-            console.log(hash);
-        })
-        .on("receipt", (receipt) => {
-            console.log(receipt);
-            sendSuperChatMessage(message, "0.001");
-        })
-        .on("error", (error, receipt) => {
+        if(parseFloat(superChatValue) > 0) {
+            setIsSuperChatting(true);
+            console.log(superChatValue);
+            let weiAmount = web3.utils.toWei(superChatValue, "ether");
+            superchatContract.methods.superChat("0x22b2DD2CFEF2018D15543c484aceF6D9B5435863", weiAmount, message, uuidv4()).send({ from: currentAccount, value: weiAmount })
+            .on("transactionHash", (hash) => {
+                console.log(hash);
+                sendSuperChatMessage(message, superChatValue);
+                setIsSuperChatting(false);
+            })
+            .on("error", (error, receipt) => {
+                toast({
+                    position: "bottom-right",
+                    title: `Request Rejected`,
+                    status: "error",
+                    isClosable: true
+                })
+                setIsSuperChatting(false);
+            })
+        } else {
             toast({
                 position: "bottom-right",
-                title: `Request Rejected`,
+                title: `SuperChat value is 0`,
                 status: "error",
                 isClosable: true
             })
-            setIsSuperChatting(false);
-        })
+        }
     }
 
     const sendSuperChatMessage = async (message, value) => {
-        let newMessage = await pubsub.publish(topic, { _id: uuidv4(), message: message, sender: currentAccount, isSuperChat: true, value: value });
+        let newMessage = await pubsub.publish(topic, { _id: uuidv4(), message: message, sender: currentAccount, isSuperChat: true, value: superChatValue });
         setMessage("");
+        setSuperChatValue(0);
         setIsSuperChatting(false);
     }
 
@@ -141,7 +156,7 @@ function ChatInterface({ currentAccount, isLocked }) {
                                             <Avatar backgroundColor="white" borderStyle="solid" borderColor="#E6017A" borderWidth="2px" size="md" bg="transparent" src={svgAvatarGenerator(message.sender, {dataUri: true})} />
                                             <VStack alignItems="flex-start" width="100%">
                                                 <Text>{message.sender.substr(0,6)}...{message.sender.substr(-6)}</Text>
-                                                <Text margin="0 !important">{message.value} USDC</Text>
+                                                <Text margin="0 !important">{message.value} ETH</Text>
                                             </VStack>
                                         </HStack>
                                         <Flex px={8} py={3} width="100%" backdropFilter="brightness(1.5)" color="white">
@@ -167,10 +182,10 @@ function ChatInterface({ currentAccount, isLocked }) {
                 </VStack>
                 :
                 <VStack justifySelf="flex-end" width="100%">
-                    <Input focusBorderColor="pink.400" isRequired={true} marginTop="0 !important" value={message} onChange={handleChange} width="100%" placeholder="Send a message" backgroundColor="gray.200" />
+                    <Input isRequired focusBorderColor="pink.400" isRequired={true} marginTop="0 !important" value={message} onChange={handleChange} width="100%" placeholder="Send a message" backgroundColor="gray.200" />
                     <HStack width="100%">
+                    <Input width="100px" value={superChatValue} focusBorderColor="pink.400" onChange={handleSuperChatValue} />
                         <Button isLoading={isSuperChatting} onClick={sendSuperChat} colorScheme="red">SuperChat</Button>
-                        <Spacer />
                         <Button onClick={sendMessage} colorScheme="facebook">Send</Button>
                     </HStack>
                 </VStack>
