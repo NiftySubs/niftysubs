@@ -10,13 +10,20 @@ import {
     Thead,
     Tr,
     Th,
-    Center
+    Center,
+    Tbody,
+    Tfoot,
+    Td,
+    TableCaption,
 } from "@chakra-ui/react";
 import { RiSignalTowerFill, RiMoneyDollarCircleFill, RiChatHeartFill } from "react-icons/ri";
 import { BrowserRouter as Router, Link, Route, Switch, useRouteMatch } from "react-router-dom";
 import { create } from "ipfs-http-client";
 import Streams from  "../Components/Streams";
 import { FaHandHoldingHeart } from "react-icons/fa";
+import Flow from "../Components/Flow";
+import SuperChatGraph from "../Components/SuperChatGraph";
+import FundGraph from "../Components/FundGraph";
 
 function Dashboard() {
 
@@ -25,7 +32,7 @@ function Dashboard() {
 
 
     return (
-        <HStack py="50px" px="100px">
+        <HStack py="50px" px="100px" spacing={40}>
             <Router>
 
                 <VStack alignItems="flex-start">
@@ -40,19 +47,13 @@ function Dashboard() {
                             <Streams />
                         </Route>
                         <Route exact  path={`${path}/flows`}>
-                            {
-                                <Heading>Flows</Heading>
-                            }
+                            <Flow />
                         </Route>
                         <Route exact  path={`${path}/superchats`}>
-                            {
-                                <Heading>SuperChats</Heading>
-                            }
+                            <SuperChatGraph />
                         </Route>
                         <Route exact  path={`${path}/fundraisers`}>
-                            {
-                                <Heading>Fundraisers</Heading>
-                            }
+                            <FundGraph />
                         </Route>
                     </Switch>
                 </VStack>
