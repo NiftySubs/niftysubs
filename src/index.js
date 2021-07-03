@@ -3,23 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import "./assets/main.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
-import theme from "./theme";
-import "@fontsource/inter";
-
-import { ChakraProvider } from "@chakra-ui/react";
 
 ReactDOM.render(
-  <>
-    <ChakraProvider theme={theme}>
-      <Router>
-        <Switch>
-          <Route exact path="/" component={App} />
-        </Switch>
-      </Router>
-    </ChakraProvider>
-  </>,
+  <App />,
   document.getElementById("root")
 );
 
