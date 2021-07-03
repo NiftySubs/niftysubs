@@ -1,6 +1,14 @@
 import "./Components.css";
 import niftysubs from '../assets/niftysubs.svg';
-import { Button, HStack, Text, Tag, TagLabel, Avatar, interactivity } from "@chakra-ui/react";
+import { 
+  Button, 
+  HStack, 
+  Text, 
+  Tag, 
+  TagLabel, 
+  Avatar,
+  Spacer 
+} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import svgAvatarGenerator from "../utils/avatar";
 
@@ -40,7 +48,8 @@ function Header({ currentAccountSetter, currentAccount }) {
         <img className="headerlogo" src={niftysubs} alt="Niftysubs Logo"></img>
         <Button variant="ghost">Browse</Button>
       </div>
-      <div></div>
+      <Spacer />
+      <Button variant="ghost">Dashboard</Button>
       <div className="headercomp">
         {
           isMetamaskInstalled ? 
