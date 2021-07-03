@@ -17,6 +17,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@truffle/hdwallet-provider": "^1.4.1",
+    "axios": "^0.21.1",
     "dotenv": "^10.0.0",
     "framer-motion": "^4.1.17",
     "ipfs-http-client": "^50.1.2",
