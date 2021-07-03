@@ -165,10 +165,10 @@ export default function HomeScreen({ currentAccount }) {
           </VStack>
           <div className="showmore">Show More</div>
           <VStack spacing={3} className="joincard">
-            <div className="cardtitle">
+            <Heading className="cardtitle">
               Join the <span className="titlecardhighlight">niftysubs</span>{" "}
               community!
-            </div>
+            </Heading>
             <Heading as="h5" fontSize={13} className="cardsubtitle">
               Discover the best live streams anywhere.
             </Heading>

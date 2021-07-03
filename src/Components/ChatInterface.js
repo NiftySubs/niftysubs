@@ -184,8 +184,8 @@ function ChatInterface({ currentAccount, isLocked }) {
                 <VStack justifySelf="flex-end" width="100%">
                     <Input isRequired focusBorderColor="pink.400" isRequired={true} marginTop="0 !important" value={message} onChange={handleChange} width="100%" placeholder="Send a message" backgroundColor="gray.200" />
                     <HStack width="100%">
+                    <Input width="100px" value={superChatValue} focusBorderColor="pink.400" onChange={handleSuperChatValue} />
                         <Button isLoading={isSuperChatting} onClick={sendSuperChat} colorScheme="red">SuperChat</Button>
-                        <Input width="100px" value={superChatValue} focusBorderColor="pink.400" onChange={handleSuperChatValue} />
                         <Button onClick={sendMessage} colorScheme="facebook">Send</Button>
                     </HStack>
                 </VStack>

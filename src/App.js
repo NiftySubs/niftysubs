@@ -17,8 +17,8 @@ function App() {
   return (
     <>
       <ChakraProvider theme={theme}>
-        <Header currentAccountSetter={setCurrentAccount} currentAccount={currentAccount} />
         <Router>
+          <Header currentAccountSetter={setCurrentAccount} currentAccount={currentAccount} />
           <Switch>
             <Route exact path="/">
               <HomeScreen currentAccount={currentAccount} />
