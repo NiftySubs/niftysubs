@@ -32,7 +32,7 @@ const IconComponent = ({ src, link, name }) => {
 export default function HomeScreen({ currentAccount }) {
 
   const toast = useToast();
-  const [ isLocked, setIsLocked ] = useState(false);
+  const [ isLocked, setIsLocked ] = useState(true);
   const [ lockAddress, setLockAddress ] = useState("0x1708fA647995135A008B363E7a725AEb05aca32e");
   const [ blockNumber, setBlockNumber ] = useState();
   const [ sender, setSender ] = useState();
@@ -181,10 +181,13 @@ export default function HomeScreen({ currentAccount }) {
               {
                 isLocked ? 
                 <VStack height="65vh" alignItems="center" justifyContent="center">
-                  <Text>Please start your money stream to watch.</Text>
                   {
                     currentAccount && !isPageLoading ? 
-                    <Button isLoading={isStartingFlow} onClick={() => startFlow("3858024691358")} className="subscribebutton" backgroundColor="black"  color="white" leftIcon={<Image filter="invert(1)" backgroundColor="transparent" borderRadius="2px" width="20px" height="20px" src="https://gblobscdn.gitbook.com/spaces%2F-MKEcOOf_qoYMObicyRu%2Favatar-1603361891616.png?alt=media" />}>Start Watching</Button>
+                    <VStack spacing={5}>
+                      <Text>Please start your money stream to watch.</Text>
+                      <Heading>10 USDC / Month</Heading> 
+                      <Button isLoading={isStartingFlow} onClick={() => startFlow("3858024691358")} className="subscribebutton" backgroundColor="black"  color="white" leftIcon={<Image filter="invert(1)" backgroundColor="transparent" borderRadius="2px" width="20px" height="20px" src="https://gblobscdn.gitbook.com/spaces%2F-MKEcOOf_qoYMObicyRu%2Favatar-1603361891616.png?alt=media" />}>Start Watching</Button>
+                    </VStack>
                     :
                     <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">Connect Wallet First</Tag>
                   }
@@ -232,7 +235,7 @@ export default function HomeScreen({ currentAccount }) {
                 </HStack>
               </HStack>
               <Box width="100%">
-                <div id="fundraising-widget-container" data-fundraise-id="0"></div>
+                <div id="fundraising-widget-container" data-fundraise-id="0" data-payable="true"></div>
               </Box>
             </VStack>
             

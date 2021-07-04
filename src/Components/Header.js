@@ -12,7 +12,7 @@ import {
 import { useState, useEffect } from "react";
 import svgAvatarGenerator from "../utils/avatar";
 import { Link } from "react-router-dom";
-
+import Web3 from "web3";
 
 function Header({ currentAccountSetter, currentAccount }) {
 
@@ -28,6 +28,11 @@ function Header({ currentAccountSetter, currentAccount }) {
       window.ethereum.on("accountsChanged", (accounts) => {
         currentAccountSetter(accounts[0]);
       })
+      // const web3 = new Web3(window.ethereum);
+      // window.ethereum.on("chainChanged", async (chainId) => {
+      //   const newChainId = await web3.eth.getChainId();
+      //   chainIdSetter(newChainId);
+      // });
     } else {
       setIsMetamaskInstalled(false);
     }
