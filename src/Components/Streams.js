@@ -19,9 +19,7 @@ import {
     ModalCloseButton,
     FormControl,
     FormLabel,
-    InputGroup,
     Input,
-    FormHelperText,
     Image,
     Textarea,
     Spinner,
@@ -29,7 +27,8 @@ import {
     Tag,
     Box,
     Tbody,
-    Td
+    Td,
+    useToast
 } from "@chakra-ui/react";
 import { init } from "events";
 import { create } from "ipfs-http-client";
@@ -37,13 +36,18 @@ import OrbitDB from "orbit-db";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { RiCheckboxCircleFill } from "react-icons/ri";
-import { MdContentCopy } from "react-icons/md";
+import UnlockABI from "../abis/unlock";
+import { v4 as uuidv4 } from "uuid";
+import Web3 from "web3";
 
-const ipfs = create("https://f2a059a7ab6b.ngrok.io/");
 
+const ipfs = create("http://0eeaad027297.ngrok.io/");
+
+const web3 = new Web3(window.ethereum);
+const unlockContract = new web3.eth.Contract(UnlockABI, "0x839b30AD296E0910ec83ACAd649eC09Ae6EfC63a");
 
 function Streams() {
-
+    const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure(); 
     const [ posterUrl, setPosterUrl ] = useState("");
     const [ isUploadingImage, setIsUploadingImage ] = useState(false);
@@ -55,6 +59,7 @@ function Streams() {
     const [ creatingStream, setCreatingStream ] = useState(false);
     const streams = [{imageUrl: "https://ipfs.io/ipfs/QmVv8U6UiZQEchGXKRnFnYNmMXsCdyQR1n8YzGk66fYJv3", streamTitle: "First Stream", status: "created" }]
 
+
     useEffect(() => {
         init();
     }, []);
@@ -63,6 +68,7 @@ function Streams() {
         const orbitdb = await OrbitDB.createInstance(ipfs);
         const db = await orbitdb.open("/orbitdb/zdpuAs7mtXzHopSJ3sD3dgwiwLbNKpbmQhJeknLAe43aXA7Hd/videosdb");
         console.log(db);
+        
     }
 
     const handleImageUpload = async ({ target }) => {
@@ -105,6 +111,7 @@ function Streams() {
         .then((response) => {
             let streamUrl = response.data.result.transmission.rtmpURL;
             let streamKey = response.data.result.transmission.streamKey;
+            let videoId = response.data.result.transmission.videoId;
             setStreamUrl(streamUrl);
             setStreamKey(streamKey);
             setAfterStreamCreated(true);
@@ -112,7 +119,29 @@ function Streams() {
         })
         .catch((error) => {
             console.log(error);
+            toast({
+                position: "bottom-right",
+                title: `Try Again!`,
+                status: "error",
+                isClosable: true
+            }) 
             setCreatingStream(false);
+        })
+    }
+
+    const createLock = async () => {
+        unlockContract.methods.createLock(
+            "32519610436",
+            "0x0000000000000000000000000000000000000000",
+            "1000000000000000000000000000000000000000000",
+            "0",
+            "lockforvideo",
+        ).call()
+        .then((receipt) => {
+            console.log(receipt);
+        })
+        .catch((error, receipt) => {
+            console.log(error);
         })
     }
 
@@ -213,7 +242,7 @@ function Streams() {
                         </ModalBody>
                         <ModalFooter>
                             <HStack width="100%">
-                                <Button isLoading={creatingStream} onClick={createStreamSubmit} colorScheme="pink">Create Stream</Button>
+                                <Button isLoading={creatingStream} onClick={createLock} colorScheme="pink">Create Stream</Button>
                             </HStack>
                         </ModalFooter>
                         </>
