@@ -11,7 +11,7 @@ import {
     Tr,
     Th,
     Center,
-    Tag
+    Tag,
     Tbody,
     Tfoot,
     Td,
