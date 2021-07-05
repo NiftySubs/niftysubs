@@ -37,9 +37,11 @@ import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import UnlockABI from "../abis/unlock";
+import PublicLockABI from "../abis/publicLock";
 import { v4 as uuidv4 } from "uuid";
 import Web3 from "web3";
 import Identities from 'orbit-db-identity-provider';
+
 
 const ipfsOptions = {
     EXPERIMENTAL: {
@@ -174,9 +176,20 @@ function Streams({ currentAccount }) {
             web3.utils.asciiToHex(uuidv4()).toString().substr(0,25)
         ).send({ from: currentAccount })
         .then(async (receipt) => {
-            setLoadingText("Storing Video Data");
-            console.log(videoId);
             let lockAddress = receipt.events.NewLock.returnValues.newLockAddress;
+            setLoadingText("Waiting For Approval");
+            makeSuperAppLockManager(lockAddress, videoId);
+        })
+        .catch((error, receipt) => {
+            console.log(error);
+        })
+    }
+
+    const makeSuperAppLockManager = async (lockAddress, videoId) => {
+        const PublicLockContract = new web3.eth.Contract(PublicLockABI, lockAddress);
+        PublicLockContract.methods.addLockManager("0xc309a55038868645ff39889d143436d2D6C109bE").send({ from: currentAccount })
+        .then(async (receipt) => {
+            setLoadingText("Storing Video Data");
             const hash = await db.put({ _id: videoId, streamTitle, streamDescription, posterUrl, creator: currentAccount, pubsubTopic: videoId, streamUrl: `https://embed.voodfy.com/${videoId}`, lockAddress: lockAddress });
             console.log(hash);
             let stream = { _id: videoId, streamTitle, streamDescription, posterUrl, creator: currentAccount, pubsubTopic: videoId, streamUrl: `https://embed.voodfy.com/${videoId}`, lockAddress: lockAddress };
@@ -192,7 +205,8 @@ function Streams({ currentAccount }) {
         })
         .catch((error, receipt) => {
             console.log(error);
-        })
+        });
+        setLoadingText("Making SuperApp Lock Manager");
     }
 
     return (
