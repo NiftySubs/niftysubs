@@ -47,7 +47,7 @@ const ipfsOptions = {
   repo: './ipfs'
 }
 
-const ipfs = create("http://4f370b3fefd1.ngrok.io/", ipfsOptions);
+const ipfs = create(process.env.REACT_APP_IPFS_URL, ipfsOptions);
 
 const web3 = new Web3(window.ethereum);
 

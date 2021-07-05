@@ -33,7 +33,7 @@ function ChatInterface({ currentAccount, isLocked, pubsubTopic }) {
     useEffect(() => {
         if(currentAccount)
             init();
-    }, [currentAccount]);
+    }, [currentAccount, pubsubTopic]);
 
     useEffect(() => {
 
@@ -44,7 +44,7 @@ function ChatInterface({ currentAccount, isLocked, pubsubTopic }) {
         let superchatContractObj = new web3.eth.Contract(SuperchatABI, superchatContractAddress);
         setSuperchatContract(superchatContractObj);
         
-        const ipfs = create("http://4f370b3fefd1.ngrok.io/");
+        const ipfs = create(process.env.REACT_APP_IPFS_URL);
         orbitdb = await OrbitDb.createInstance(ipfs);
         db = await orbitdb.docs("niftysubs");
         pubsub = new IPFSpubsub(ipfs, "niftysubs");
