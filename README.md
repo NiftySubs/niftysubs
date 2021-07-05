@@ -17,6 +17,22 @@
     <a href="https://github.com/NiftySubs/niftysubs/issues">Request Feature</a>
   </p>
 
+##  Features
+
+<p> ✔️ Pay-as-you-watch, cheapest video streaming experience. </p>
+<p> ✔️ Superchat feature, show love tour favorite creators and get your message highlighted! </p>
+<p> ✔️ Creators can do NFT giveaways to viewers!  </p>
+<p> ✔️ Broswe through old streams by your favorite creators. </p>
+<p> ✔️ Donate money to a creator or for a cuase hassle free </p>
+<p> ✔️ Customized dashboard for creators as a one access place for their statistics. </p>
+
+
+## Architecture
+
+![Flow of Control](./src/assets/architecture1.png)
+![Flow of Build of Network](./src/assets/architecture2.png)
+![Dataset Info](./src/assets/architecture3.png)
+
 ### Built With
 We have used the following technologies for this project:
 * [Solidity](https://docs.soliditylang.org/en/v0.8.3/) (Language for writing smart contracts of the Dapp)
