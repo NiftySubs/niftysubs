@@ -1,4 +1,65 @@
-# Getting Started with Create React App
+<h1 align="center">NiftySubs - Your Decentralized Streaming Platform</h1>
+
+<p align="center">
+  <a href="https://github.com/niftysubs/niftysubs">
+    <img src="./src/assets/niftysubs.svg" alt="Logo" width="120" height="120">
+  </a>
+
+  </p>
+
+## _With a pay-as-you-use model, you can now watch your favorite creators at minimal cost only on NiftySubs_
+
+<p align="center">
+    <a href="https://www.niftysubs.com/">View Demo</a>
+    ·
+    <a href="https://github.com/NiftySubs/niftysubs/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/NiftySubs/niftysubs/issues">Request Feature</a>
+  </p>
+
+### Built With
+We have used the following technologies for this project:
+* [Solidity](https://docs.soliditylang.org/en/v0.8.3/) (Language for writing smart contracts of the Dapp)
+* [Chainlink](https://chain.link/) (For selecting the winner of NFT from the list of viewers!)
+* [Filecoin](https://filecoin.io/) (Voodify service for the persistence of video and transmissions)
+* [Infura](https://infura.io/) (Connect to the blockchain to provide event list widget to the creators)
+* [IPFS](https://ipfs.io/) (IPFS PubSub for chat feature and orbitdb for storing data)
+* [Superfluid](https://www.superfluid.finance/) (Superfluid CFA to enable the pay-as-you-use feature)
+* [Metamask](https://metamask.io) (Wallet Provider)
+* [The Graph](https://thegraph.com/) (Query historical events to provide info on our dapp to both the creators and viewers)
+* [OrbitDB](https://orbitdb.org/) (For storing metadata about the video and creator profile information)
+* [Tailwind](https://tailwind.com) (CSS framework)
+* [ReactJS](https://reactjs.org/) (web UI)
+
+## Getting Started
+
+* Clone the repo:
+
+`git clone https://github.com/NiftySubs/niftysubs.git && cd niftysubs`
+
+### Run the Project
+
+
+Once you are in the project directory nstall the required dependencies using a package manager `yarn` or `npm`.
+
+`yarn add` or `npm install`
+
+`yarn start` or `npm start`
+
+Runs the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+
+
+
+
+
+
+
+
+
+
+<!-- # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -67,4 +128,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 ### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify) -->

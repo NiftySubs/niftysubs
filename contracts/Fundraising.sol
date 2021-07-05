@@ -59,7 +59,7 @@ contract Fundraising {
         fundraise.amountFunded = fundraise.amountFunded.add(msg.value); // increase amountFunded to Donation
         donatorToDonation[fundraiseId][msg.sender] = donatorToDonation[fundraiseId][msg.sender].add(msg.value);
         donatorToFundraise[msg.sender].push(fundraiseId); // if a person donates 2 times then 2 id's are added.
-        emit Donation(fundraiseId, msg.sender, fundraiseId, msg.value);
+        emit Donation(msg.sender, fundraiseId, msg.value);
     }
 
     function createFundraise(address beneficiary, uint256 fundraiseGoal, string memory fundraiseAgenda, uint256 fundraiseDeadline) external {
@@ -107,5 +107,13 @@ contract Fundraising {
     function getAmountFunded(uint256 fundraiseId) external view returns(uint256) {
         Fundraise memory fundraise = allFundraises[fundraiseId];
         return fundraise.amountFunded;
+    }
+
+    function getFundraises(address fundraiser) external view returns(uint256[] memory) {
+        return fundraiserToFundraise[fundraiser];
+    }
+
+    function getDonations(address donator) external view returns(uint256[] memory) {
+        return donatorToFundraise[donator];
     }
 }
