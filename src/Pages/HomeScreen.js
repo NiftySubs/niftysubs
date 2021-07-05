@@ -1,4 +1,3 @@
-import Header from "../Components/Header.js";
 import "./HomeScreen.css";
 import c2c from "../assets/c2caftermovie.mp4";
 import dummyimage from "../assets/rishabh-profile.jpg";
