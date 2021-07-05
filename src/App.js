@@ -7,6 +7,7 @@ import theme from "./theme";
 
 import "@fontsource/inter";
 import Dashboard from './Pages/Dashboard';
+import Browse from './Pages/Browse';
 
 import { ChakraProvider } from "@chakra-ui/react";
 
@@ -25,6 +26,9 @@ function App() {
             </Route>
             <Route exact path="/dashboard">
               <Dashboard />
+            </Route>
+            <Route exact path="/browse">
+              <Browse />
             </Route>
           </Switch>
         </Router>

@@ -17,8 +17,47 @@
     text-align: left;
 }
 .mainpanel{
-    width:70vw;
+    width:80vw;
 
+}
+.browsetitle{
+    font-size: 3rem;
+    font-weight: 700;
+    padding: 8px 16px;
+}
+.browsescreen{
+    display: flex;
+}
+.videocards{
+    display: flex;
+    flex-wrap: wrap;
+}
+.videocard{
+    padding: 8px;
+}
+.videocardimage{
+    height: 200px;
+    width: 170px;
+}
+.videocardtitle{
+    font-size: 14px;
+    font-weight: 400;
+}
+.videocardsubtitle{
+    font-size:12px;
+    font-weight: 400;
+    color: #53535F;
+}
+.videocardtag{
+    font-size: 12px;
+    color: #53535F;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 900px;
+    width: 40px;
 }
 .artist{
     display: flex;
