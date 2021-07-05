@@ -100,8 +100,10 @@ export default function HomeScreen({ currentAccount }) {
     changeFlowSender(currentAccount);
   }
 
-  const changeFlowSender = (currentAccount) => {
+  const changeFlowSender = async (currentAccount) => {
     const bob = sf.user({address: currentAccount, token: sf.tokens.fDAIx.address});
+    let details = await bob.details(); 
+    console.log(details);
     setSender(bob);
     setIsPageLoading(false);
   }
