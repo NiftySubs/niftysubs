@@ -48,6 +48,8 @@ const IconComponent = ({ src, link, name }) => {
   );
 };
 
+const topic = "60e2fffd61b758393271368c";
+
 export default function HomeScreen({ currentAccount }) {
   const [ avatar, setAvatar ] = useState(undefined);
   const toast = useToast();
@@ -59,7 +61,6 @@ export default function HomeScreen({ currentAccount }) {
   const [ web3, setWeb3 ] = useState();
   const [ isStartingFlow, setIsStartingFlow ] = useState(false);
   const [ isPageLoading, setIsPageLoading ] = useState(true);
-  const [ topic, setTopic ] = useState("");
   const [ db, setdb ] = useState();
   const [ fundraiseId, setFundraiseId ] = useState();
   const [ sf, setSf ] = useState(new Framework({
@@ -91,7 +92,7 @@ export default function HomeScreen({ currentAccount }) {
     setdb(db);
     let transmission = await db.query((docs) => docs._id == id);
     console.log(transmission);
-    setTopic(transmission[0].pubsubTopic);
+    // setTopic(transmission[0].pubsubTopic);
     setLockAddress(transmission[0].lockAddress);
   }, []);
 
