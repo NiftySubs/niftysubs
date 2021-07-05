@@ -40,7 +40,6 @@ function Dashboard({ currentAccount }) {
 
                     <VStack alignItems="flex-start">
                         <Link to={`${url}/streams`}><Button justifyContent="flex-start" textAlign="left"  width="200px" variant="ghost" leftIcon={<RiSignalTowerFill />}>Streams</Button></Link>
-                        <Link to={`${url}/flows`}><Button justifyContent="flex-start" width="200px" variant="ghost" leftIcon={<RiMoneyDollarCircleFill />}>Flows</Button></Link>
                         <Link to={`${url}/superchats`}><Button justifyContent="flex-start" width="200px" variant="ghost" leftIcon={<RiChatHeartFill />}>SuperChats</Button></Link>
                         <Link to={`${url}/fundraisers`}><Button justifyContent="flex-start" width="200px" variant="ghost" leftIcon={<FaHandHoldingHeart />}>Fundraisers</Button></Link>
                     </VStack>
@@ -48,11 +47,6 @@ function Dashboard({ currentAccount }) {
                         <Switch>
                             <Route exact path={`${path}/streams`}>
                                 <Streams currentAccount={currentAccount} />
-                            </Route>
-                            <Route exact  path={`${path}/flows`}>
-                                {
-                                    <Heading>Flows</Heading>
-                                }
                             </Route>
                             <Route exact  path={`${path}/superchats`}>
                                 {

@@ -85,6 +85,7 @@ function Streams({ currentAccount }) {
         await db.load();
         setdb(db);
         const streams = await db.query((docs) => docs.creator == currentAccount);
+        console.log(streams);
         setStreams([...streams]);
         console.log(streams);
         setIsPageLoading(false);
