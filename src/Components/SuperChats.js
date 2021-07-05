@@ -144,7 +144,6 @@ function SuperChats({ currentAccount }) {
                         </Tbody>
                     </Table>
                 </HStack>
-                
                 :
                 null
             }
