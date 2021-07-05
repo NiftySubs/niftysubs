@@ -187,7 +187,7 @@ function Streams({ currentAccount }) {
 
     const makeSuperAppLockManager = async (lockAddress, videoId) => {
         const PublicLockContract = new web3.eth.Contract(PublicLockABI, lockAddress);
-        PublicLockContract.methods.addLockManager("0x49b0FC973FE337010f5032C32423609D4d85C667").send({ from: currentAccount })
+        PublicLockContract.methods.addLockManager("0xc309a55038868645ff39889d143436d2D6C109bE").send({ from: currentAccount })
         .then(async (receipt) => {
             setLoadingText("Storing Video Data");
             const hash = await db.put({ _id: videoId, streamTitle, streamDescription, posterUrl, creator: currentAccount, pubsubTopic: videoId, streamUrl: `https://embed.voodfy.com/${videoId}`, lockAddress: lockAddress });
