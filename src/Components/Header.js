@@ -52,7 +52,8 @@ function Header({ currentAccountSetter, currentAccount }) {
     <HStack padding={3} className="Header">
       <div className="headercomp">
         <Link to="/"><img className="headerlogo" src={niftysubs} alt="Niftysubs Logo"></img></Link>
-        <Link to = "/browse"><Button variant="ghost">Browse</Button></Link>
+        <Link to = "/"><Button variant="ghost">Browse</Button></Link>
+        <Link to = "/video/60e2fffd61b758393271368c"><Button ml={3} variant="ghost">Video</Button></Link>
       </div>
       <Spacer />
       <Link to="/dashboard"><Button variant="ghost">Dashboard</Button></Link>

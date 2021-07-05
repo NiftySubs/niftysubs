@@ -18,12 +18,11 @@
 }
 .mainpanel{
     width:80vw;
-
 }
+
 .browsetitle{
     font-size: 3rem;
     font-weight: 700;
-    padding: 8px 16px;
 }
 .browsescreen{
     display: flex;

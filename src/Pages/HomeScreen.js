@@ -2,7 +2,7 @@ import "./HomeScreen.css";
 import c2c from "../assets/c2caftermovie.mp4";
 import dummyimage from "../assets/rishabh-profile.jpg";
 import icons from "./socialicondata";
-import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text, StatGroup } from "@chakra-ui/react";
+import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text, StatGroup, Avatar } from "@chakra-ui/react";
 import ChatInterface from "../Components/ChatInterface.js";
 import { useState, useEffect } from "react";
 import publicLockABI from "../abis/publicLock";
@@ -10,10 +10,30 @@ import Web3 from "web3";
 import { Framework } from "@superfluid-finance/js-sdk";
 import { Web3Provider } from "@ethersproject/providers";
 import { useToast } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
+import OrbitDB from "orbit-db";
+import { create } from "ipfs-http-client";
+import FundraisingContractABI from "../abis/fundraising";
+import svgAvatarGenerator from "../utils/avatar";
 
 var sf;
 var lockABI;
 var LockContract;
+
+const ipfsOptions = {
+  EXPERIMENTAL: {
+    pubsub: true
+  },
+  repo: './ipfs'
+}
+
+
+
+const web3 = new Web3(window.ethereum);
+const FundraisingContract = new web3.eth.Contract(FundraisingContractABI, "0x608DA975Dd743Bde9ab6329258E4AD3619A533EF");
+
+
+const ipfs = create("http://4f370b3fefd1.ngrok.io/", ipfsOptions);
 
 const IconComponent = ({ src, link, name }) => {
   return (
@@ -29,22 +49,26 @@ const IconComponent = ({ src, link, name }) => {
 };
 
 export default function HomeScreen({ currentAccount }) {
-
+  const [ avatar, setAvatar ] = useState(undefined);
   const toast = useToast();
+  const { id } = useParams();
   const [ isLocked, setIsLocked ] = useState(true);
-  const [ lockAddress, setLockAddress ] = useState("0x1708fA647995135A008B363E7a725AEb05aca32e");
+  const [ lockAddress, setLockAddress ] = useState("");
   const [ blockNumber, setBlockNumber ] = useState();
   const [ sender, setSender ] = useState();
   const [ web3, setWeb3 ] = useState();
   const [ isStartingFlow, setIsStartingFlow ] = useState(false);
   const [ isPageLoading, setIsPageLoading ] = useState(true);
+  const [ topic, setTopic ] = useState("");
+  const [ db, setdb ] = useState();
+  const [ fundraiseId, setFundraiseId ] = useState();
   const [ sf, setSf ] = useState(new Framework({
     ethers: new Web3Provider(window.ethereum),
-    tokens: ['fDAI']
+    tokens: ['fUSDC']
   }));
 
 
-  useEffect(() => {
+  useEffect(async () => {
     var loadScript = function (src) {
       var tag = document.createElement('script');
       tag.async = false;
@@ -52,7 +76,23 @@ export default function HomeScreen({ currentAccount }) {
       var body = document.getElementsByTagName('body')[0];
       body.appendChild(tag);
     }
+
+    let svg = svgAvatarGenerator("0x22b2DD2CFEF2018D15543c484aceF6D9B5435863", {dataUri: true});
+    setAvatar(svg);
+
+    
+
     loadScript("https://niftysubs.github.io/fundraising-widget/main.js");
+
+
+    const orbitdb = await OrbitDB.createInstance(ipfs);
+    let db = await orbitdb.docs("/orbitdb/zdpuAz6e2rGQ917hroubfJuazTQDTHdvDPhm7QhKkMiu64SD7/videosdb");
+    await db.load();
+    setdb(db);
+    let transmission = await db.query((docs) => docs._id == id);
+    console.log(transmission);
+    setTopic(transmission[0].pubsubTopic);
+    setLockAddress(transmission[0].lockAddress);
   }, []);
 
   useEffect(() => {
@@ -66,6 +106,7 @@ export default function HomeScreen({ currentAccount }) {
     let web3 = new Web3(window.ethereum);
     setWeb3(web3);
 
+    
 
     await sf.initialize();
 
@@ -75,7 +116,7 @@ export default function HomeScreen({ currentAccount }) {
     `;
 
 
-    LockContract = new web3.eth.Contract(publicLockABI, lockAddress);
+    LockContract = new web3.eth.Contract(publicLockABI, "0x471510Cc19959e8207F68Da71c9f311e8848C424");
 
     setBlockNumber(await web3.eth.getBlockNumber());
 
@@ -96,11 +137,14 @@ export default function HomeScreen({ currentAccount }) {
       setIsLocked(true);
     })
 
+    let fundraises = await FundraisingContract.methods.getFundraises(currentAccount).call();
+    console.log(fundraises);
+    setFundraiseId(fundraises[fundraises.length - 1]);
     changeFlowSender(currentAccount);
   }
 
   const changeFlowSender = async (currentAccount) => {
-    const bob = sf.user({address: currentAccount, token: sf.tokens.fDAIx.address});
+    const bob = sf.user({address: currentAccount, token: sf.tokens.fUSDCx.address});
     let details = await bob.details(); 
     console.log(details);
     setSender(bob);
@@ -109,10 +153,10 @@ export default function HomeScreen({ currentAccount }) {
 
   const startFlow = async (flowRate) => {
     setIsStartingFlow(true);
-    const carol = sf.user({address: "0xc309a55038868645ff39889d143436d2D6C109bE", token: sf.tokens.fDAIx.address});
+    const carol = sf.user({address: "0xc309a55038868645ff39889d143436d2D6C109bE", token: sf.tokens.fUSDCx.address});
     const userData = await web3.eth.abi.encodeParameters(
       ["address"],
-      ["0x1708fA647995135A008B363E7a725AEb05aca32e"]
+      ["0x471510Cc19959e8207F68Da71c9f311e8848C424"]
     );
     const tx = sender.flow({
       recipient: carol,
@@ -197,6 +241,7 @@ export default function HomeScreen({ currentAccount }) {
                 <video
                 className="video-border"
                 controls
+                autoplay="true"
                 src={c2c}
                 type="video/mp4"
                 width="100%"
@@ -207,11 +252,7 @@ export default function HomeScreen({ currentAccount }) {
               <HStack spacing={5} className="videoinfo">
                 <Flex className="videocreatorimage" justifySelf="flex-start" justifyContent="flex-start" alignContent="flex-start">
                   <Box borderStyle="solid" padding="2px" borderRadius="50%" borderWidth="3px" borderColor="#E6017A">
-                    <Image
-                      className="creatorimage"
-                      src={dummyimage}
-                      alt="creator profile"
-                    />
+                    <Avatar width="70px" height="70px" borderStyle="solid" borderColor="#E6017A" borderWidth="2px" padding="1px" size="sm" bg="transparent" src={avatar} />
                   </Box>
                 </Flex>
                 <VStack justifyContent="flex-start" alignItems="flex-start" className="videodetails">
@@ -236,7 +277,7 @@ export default function HomeScreen({ currentAccount }) {
                 </HStack>
               </HStack>
               <Box width="100%">
-                <div id="fundraising-widget-container" data-fundraise-id="0" data-payable="true"></div>
+                <div id="fundraising-widget-container" data-fundraise-id="6" data-payable="true"></div>
               </Box>
             </VStack>
             
@@ -268,8 +309,7 @@ export default function HomeScreen({ currentAccount }) {
               </div>
             </div> */}
           </VStack>
-          <ChatInterface isLocked={isLocked} currentAccount={currentAccount} />
-          
+          <ChatInterface pubsubTopic={topic} isLocked={isLocked} currentAccount={currentAccount} />
         </HStack>
       </HStack>
     </div>

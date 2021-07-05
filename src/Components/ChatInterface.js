@@ -15,13 +15,12 @@ var db;
 var pubsub;
 var web3;
 
-function ChatInterface({ currentAccount, isLocked }) {
+function ChatInterface({ currentAccount, isLocked, pubsubTopic }) {
     const toast = useToast();
     const [isConnectingToDatabase, setIsConnectingToDatabase ] = useState(false);
     const [ isStreaming, setIsStreaming ] = useState(false);
     const [ message, setMessage ] = useState("");
     const [ messages, setMessages ] = useState([]);
-    const [ topic, setTopic ] = useState("video");
     const [ superchatContractAddress, setSuperchatContractAddress ] = useState("0xE85b157E7685Ce6Bc35fd33c1dfb7E887E7470AF");
     const [ superchatContract, setSuperchatContract ] = useState("");
     const [ isSuperChatting, setIsSuperChatting ] = useState(false);
@@ -45,7 +44,7 @@ function ChatInterface({ currentAccount, isLocked }) {
         let superchatContractObj = new web3.eth.Contract(SuperchatABI, superchatContractAddress);
         setSuperchatContract(superchatContractObj);
         
-        const ipfs = create("http://localhost:5001/");
+        const ipfs = create("http://4f370b3fefd1.ngrok.io/");
         orbitdb = await OrbitDb.createInstance(ipfs);
         db = await orbitdb.docs("niftysubs");
         pubsub = new IPFSpubsub(ipfs, "niftysubs");
@@ -54,8 +53,8 @@ function ChatInterface({ currentAccount, isLocked }) {
     } 
 
     const subscribeToTopic = async () => {
-        await pubsub.subscribe(topic, handleMessage, handleNewPeer);
-        console.log(`Subscribed to ${topic}`);
+        await pubsub.subscribe(pubsubTopic, handleMessage, handleNewPeer);
+        console.log(`Subscribed to ${pubsubTopic}`);
     }
 
     const handleMessage = (topic, message) => {
@@ -65,8 +64,7 @@ function ChatInterface({ currentAccount, isLocked }) {
     }
 
     const handleNewPeer = (address, peer) => {
-        console.log("someone joined");
-        console.log(`Hello ${peer}`);
+       
     }
 
     // const initDb = async () => {
@@ -97,7 +95,7 @@ function ChatInterface({ currentAccount, isLocked }) {
     }
 
     const sendMessage = async () => {
-        let newMessage = await pubsub.publish(topic, { _id: uuidv4(), message: message, sender: currentAccount, isSuperChat: false, value: 0 });
+        let newMessage = await pubsub.publish(pubsubTopic, { _id: uuidv4(), message: message, sender: currentAccount, isSuperChat: false, value: 0 });
         setMessage("");
     }
 
@@ -132,7 +130,7 @@ function ChatInterface({ currentAccount, isLocked }) {
     }
 
     const sendSuperChatMessage = async (message, value) => {
-        let newMessage = await pubsub.publish(topic, { _id: uuidv4(), message: message, sender: currentAccount, isSuperChat: true, value: superChatValue });
+        let newMessage = await pubsub.publish(pubsubTopic, { _id: uuidv4(), message: message, sender: currentAccount, isSuperChat: true, value: superChatValue });
         setMessage("");
         setSuperChatValue(0);
         setIsSuperChatting(false);
