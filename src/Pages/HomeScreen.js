@@ -33,7 +33,7 @@ const web3 = new Web3(window.ethereum);
 const FundraisingContract = new web3.eth.Contract(FundraisingContractABI, "0x608DA975Dd743Bde9ab6329258E4AD3619A533EF");
 
 
-const ipfs = create("http://4f370b3fefd1.ngrok.io/", ipfsOptions);
+const ipfs = create(process.env.REACT_APP_IPFS_URL, ipfsOptions);
 
 const IconComponent = ({ src, link, name }) => {
   return (
