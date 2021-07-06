@@ -2,9 +2,10 @@
 
 <p align="center">
   <a href="https://github.com/niftysubs/niftysubs">
-    <img src="./src/assets/Frame 1.png" alt="Logo" width="960" height="480">
+    <img src="./src/assets/Frame 1.png" alt="Logo" width="480" height="240">
   </a>
-
+  <h6>Built at ETHGlobal HackMoney 2021</h6>
+  <img src="./src/assets/ethglobal.svg" alt="Logo" width="120" height="120">
   </p>
 
 ## _With a pay-as-you-use model, you can now watch your favorite creators at minimal cost only on NiftySubs_
