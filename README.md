@@ -1,11 +1,14 @@
-<h1 align="center">NiftySubs - Your Decentralized Streaming Platform</h1>
+<h1 align="center">NiftySubs - Your Decentralized Live Streaming Platform</h1>
 
 <p align="center">
   <a href="https://github.com/niftysubs/niftysubs">
-    <img src="./src/assets/niftysubs.svg" alt="Logo" width="120" height="120">
+    <img src="./src/assets/Frame 1.png" alt="Logo" width="480" height="240">
   </a>
-
+  <h6>Built at ETHGlobal HackMoney 2021</h6>
+  <img src="./src/assets/ethglobal.svg" alt="Logo" width="120" height="120">
   </p>
+  
+  <p align="center"><a href="https://www.youtube.com/watch?v=skJes2cwNTI">Watch Demo Video on YouTube</a></p>
 
 ## _With a pay-as-you-use model, you can now watch your favorite creators at minimal cost only on NiftySubs_
 
@@ -23,9 +26,10 @@
 <p> ✔️ Superchat feature, show love tour favorite creators and get your message highlighted! </p>
 <p> ✔️ Creators can do NFT giveaways to viewers!  </p>
 <p> ✔️ Broswe through old streams by your favorite creators. </p>
-<p> ✔️ Donate money to a creator or for a cuase hassle free </p>
+<p> ✔️ Donate money to a creator or raise money for a cause using our custom widget-embed hassle free </p>
 <p> ✔️ Customized dashboard for creators as a one access place for their statistics. </p>
-
+ 
+ **A lot more to come!**
 
 ## Architecture
 
@@ -41,9 +45,10 @@ We have used the following technologies for this project:
 * [Infura](https://infura.io/) (Connect to the blockchain to provide event list widget to the creators)
 * [IPFS](https://ipfs.io/) (IPFS PubSub for chat feature and orbitdb for storing data)
 * [Superfluid](https://www.superfluid.finance/) (Superfluid CFA to enable the pay-as-you-use feature)
+* [Ʉnlock Protocol](https://unlock-protocol.com/)(Unlock lets is easily lock and manage access to our monetized content on NiftySubs.)
 * [Metamask](https://metamask.io) (Wallet Provider)
 * [The Graph](https://thegraph.com/) (Query historical events to provide info on our dapp to both the creators and viewers)
-* [OrbitDB](https://orbitdb.org/) (For storing metadata about the video and creator profile information)
+* [OrbitDB](https://orbitdb.org/) (For storing metadata about the video and creator profile information and pubsub live chat)
 * [Tailwind](https://tailwind.com) (CSS framework)
 * [ReactJS](https://reactjs.org/) (web UI)
 
