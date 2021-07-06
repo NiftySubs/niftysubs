@@ -46,6 +46,7 @@ We have used the following technologies for this project:
 * [IPFS](https://ipfs.io/) (IPFS PubSub for chat feature and orbitdb for storing data)
 * [Superfluid](https://www.superfluid.finance/) (Superfluid CFA to enable the pay-as-you-use feature)
 * [Ʉnlock Protocol](https://unlock-protocol.com/)(Unlock lets is easily lock and manage access to our monetized content on NiftySubs.)
+* [Voodfy](https://www.voodfy.com/)(Voodfy uses Filecoin combined with IPFS to store your videos reliably and securely. We use it for live video streaming)
 * [Metamask](https://metamask.io) (Wallet Provider)
 * [The Graph](https://thegraph.com/) (Query historical events to provide info on our dapp to both the creators and viewers)
 * [OrbitDB](https://orbitdb.org/) (For storing metadata about the video and creator profile information and pubsub live chat)
