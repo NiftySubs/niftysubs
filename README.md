@@ -7,6 +7,8 @@
   <h6>Built at ETHGlobal HackMoney 2021</h6>
   <img src="./src/assets/ethglobal.svg" alt="Logo" width="120" height="120">
   </p>
+  
+  <p align="center"><a href="https://www.youtube.com/watch?v=skJes2cwNTI">Watch Demo Video on YouTube</a></p>
 
 ## _With a pay-as-you-use model, you can now watch your favorite creators at minimal cost only on NiftySubs_
 
