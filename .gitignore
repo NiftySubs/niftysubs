@@ -12,6 +12,7 @@ node_modules
 # production
 /build
 .netlify
+package-lock.json
 
 # misc
 .DS_Store
