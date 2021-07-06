@@ -1,8 +1,8 @@
-<h1 align="center">NiftySubs - Your Decentralized Streaming Platform</h1>
+<h1 align="center">NiftySubs - Your Decentralized Live Streaming Platform</h1>
 
 <p align="center">
   <a href="https://github.com/niftysubs/niftysubs">
-    <img src="./src/assets/Frame 1.png" alt="Logo" width="120" height="120">
+    <img src="./src/assets/Frame 1.png" alt="Logo" width="960" height="480">
   </a>
 
   </p>
@@ -23,9 +23,10 @@
 <p> ✔️ Superchat feature, show love tour favorite creators and get your message highlighted! </p>
 <p> ✔️ Creators can do NFT giveaways to viewers!  </p>
 <p> ✔️ Broswe through old streams by your favorite creators. </p>
-<p> ✔️ Donate money to a creator or for a cuase hassle free </p>
+<p> ✔️ Donate money to a creator or raise money for a cause using our custom widget-embed hassle free </p>
 <p> ✔️ Customized dashboard for creators as a one access place for their statistics. </p>
-
+ 
+ **A lot more to come!**
 
 ## Architecture
 
