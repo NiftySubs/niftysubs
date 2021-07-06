@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/niftysubs/niftysubs">
-    <img src="./src/assets/niftysubs.svg" alt="Logo" width="120" height="120">
+    <img src="./src/assets/Frame 1.png" alt="Logo" width="120" height="120">
   </a>
 
   </p>
@@ -41,9 +41,10 @@ We have used the following technologies for this project:
 * [Infura](https://infura.io/) (Connect to the blockchain to provide event list widget to the creators)
 * [IPFS](https://ipfs.io/) (IPFS PubSub for chat feature and orbitdb for storing data)
 * [Superfluid](https://www.superfluid.finance/) (Superfluid CFA to enable the pay-as-you-use feature)
+* [Ʉnlock Protocol](https://unlock-protocol.com/)(Unlock lets is easily lock and manage access to our monetized content on NiftySubs.)
 * [Metamask](https://metamask.io) (Wallet Provider)
 * [The Graph](https://thegraph.com/) (Query historical events to provide info on our dapp to both the creators and viewers)
-* [OrbitDB](https://orbitdb.org/) (For storing metadata about the video and creator profile information)
+* [OrbitDB](https://orbitdb.org/) (For storing metadata about the video and creator profile information and pubsub live chat)
 * [Tailwind](https://tailwind.com) (CSS framework)
 * [ReactJS](https://reactjs.org/) (web UI)
 
