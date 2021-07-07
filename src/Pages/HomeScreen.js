@@ -38,10 +38,7 @@ export default function HomeScreen({ currentAccount }) {
   const [ web3, setWeb3 ] = useState();
   const [ isStartingFlow, setIsStartingFlow ] = useState(false);
   const [ isPageLoading, setIsPageLoading ] = useState(true);
-  const [ sf, setSf ] = useState(new Framework({
-    ethers: new Web3Provider(window.ethereum),
-    tokens: ['fDAI']
-  }));
+  const [ sf, setSf ] = useState();
 
 
   useEffect(() => {
@@ -66,7 +63,11 @@ export default function HomeScreen({ currentAccount }) {
     let web3 = new Web3(window.ethereum);
     setWeb3(web3);
 
-
+    let framework = new Framework({
+      ethers: new Web3Provider(window.ethereum),
+      tokens: ['fUSDC']
+    });
+    setSf(framework);
     await sf.initialize();
 
     lockABI = `
