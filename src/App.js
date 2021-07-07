@@ -37,13 +37,13 @@ function App() {
         <Router>
           <Header currentAccountSetter={setCurrentAccount} currentAccount={currentAccount} />
           <Switch>
-            <Route exact path="/">
+            <Route exact path="/video/:id">
               <HomeScreen currentAccount={currentAccount} />
             </Route>
             <Route exact path="/dashboard">
               <Dashboard currentAccount={currentAccount} />
             </Route>
-            <Route exact path="/browse">
+            <Route exact path="/">
               <Browse />
             </Route>
           </Switch>

@@ -38,7 +38,7 @@ export default function HomeScreen({ currentAccount }) {
   const [ web3, setWeb3 ] = useState();
   const [ isStartingFlow, setIsStartingFlow ] = useState(false);
   const [ isPageLoading, setIsPageLoading ] = useState(true);
-  const [ sf, setSf ] = useState();
+
 
 
   useEffect(() => {
@@ -67,6 +67,7 @@ export default function HomeScreen({ currentAccount }) {
       ethers: new Web3Provider(window.ethereum),
       tokens: ['fUSDC']
     });
+
     setSf(framework);
     await sf.initialize();
 
@@ -101,7 +102,7 @@ export default function HomeScreen({ currentAccount }) {
   }
 
   const changeFlowSender = async (currentAccount) => {
-    const bob = sf.user({address: currentAccount, token: sf.tokens.fDAIx.address});
+    const bob = sf.user({address: currentAccount, token: sf.tokens.fUSDCx.address});
     let details = await bob.details(); 
     console.log(details);
     setSender(bob);
@@ -110,7 +111,7 @@ export default function HomeScreen({ currentAccount }) {
 
   const startFlow = async (flowRate) => {
     setIsStartingFlow(true);
-    const carol = sf.user({address: "0xc309a55038868645ff39889d143436d2D6C109bE", token: sf.tokens.fDAIx.address});
+    const carol = sf.user({address: "0xc309a55038868645ff39889d143436d2D6C109bE", token: sf.tokens.fUSDCx.address});
     const userData = await web3.eth.abi.encodeParameters(
       ["address"],
       ["0x1708fA647995135A008B363E7a725AEb05aca32e"]

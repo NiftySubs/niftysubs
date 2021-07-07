@@ -50,7 +50,7 @@ const ipfsOptions = {
     repo: './ipfs'
 }
 
-const ipfs = create("http://4f370b3fefd1.ngrok.io/", ipfsOptions);
+const ipfs = create(process.env.REACT_APP_IPFS_URL, ipfsOptions);
 
 const web3 = new Web3(window.ethereum);
 const unlockContract = new web3.eth.Contract(UnlockABI, "0xd8c88be5e8eb88e38e6ff5ce186d764676012b0b");
@@ -85,6 +85,7 @@ function Streams({ currentAccount }) {
         await db.load();
         setdb(db);
         const streams = await db.query((docs) => docs.creator == currentAccount);
+        console.log(streams);
         setStreams([...streams]);
         console.log(streams);
         setIsPageLoading(false);
@@ -225,8 +226,7 @@ function Streams({ currentAccount }) {
                     <Thead>
                         <Tr>
                             <Th>Video</Th>
-                            <Th>Status</Th>
-                            <Th>Options</Th>
+                            <Th>Id</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -242,9 +242,6 @@ function Streams({ currentAccount }) {
                                         </Td>
                                         <Td>
                                             <Tag textTransform="uppercase">{stream._id}</Tag>
-                                        </Td>
-                                        <Td>
-
                                         </Td>
                                     </Tr>
                                 )

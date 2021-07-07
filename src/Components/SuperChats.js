@@ -76,7 +76,7 @@ function SuperChats({ currentAccount }) {
             <Divider color="pink" />
             {
                 currentAccount ?
-                <HStack width="100%">
+                <HStack alignItems="flex-start" width="100%">
                     <Table>
                         <Thead>
                             <Tr>
