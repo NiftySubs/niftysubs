@@ -1,32 +1,16 @@
-import Header from "../Components/Header";
 import { 
     HStack, 
     VStack, 
     Button, 
-    Heading,
-    Spacer,
-    Divider,
-    Table,
-    Thead,
-    Tr,
-    Th,
-    Center,
     Tag,
-    Tbody,
-    Tfoot,
-    Td,
-    TableCaption,
 } from "@chakra-ui/react";
-import { RiSignalTowerFill, RiMoneyDollarCircleFill, RiChatHeartFill } from "react-icons/ri";
+import { RiSignalTowerFill, RiChatHeartFill } from "react-icons/ri";
 import { BrowserRouter as Router, Link, Route, Switch, useRouteMatch } from "react-router-dom";
-import { create } from "ipfs-http-client";
 import Streams from  "../Components/Streams";
 import { FaHandHoldingHeart } from "react-icons/fa";
 import Fundraisers from "../Components/Fundraisers";
 import SuperChats from "../Components/SuperChats";
-import Flow from "../Components/Flow";
-import SuperChatGraph from "../Components/SuperChatGraph";
-import FundGraph from "../Components/FundGraph";
+
 
 function Dashboard({ currentAccount }) {
 

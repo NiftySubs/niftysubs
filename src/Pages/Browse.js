@@ -1,67 +1,38 @@
 import "./HomeScreen.css";
 import {
   BrowserRouter as Router,
-  Link,
-  Route,
-  useRouteMatch,
 } from "react-router-dom";
-import c2c from "../assets/c2caftermovie.mp4";
-import dummyimage from "../assets/rishabh-profile.jpg";
-import icons from "./socialicondata";
+
 import {
-  Button,
   Heading,
   VStack,
   HStack,
-  Box,
-  Flex,
-  Spacer,
   Image,
   Tag,
   Text,
-  StatGroup,
   Spinner,
   useToast,
-  Grid
+  Grid,
 } from "@chakra-ui/react";
 import { useState, useEffect, useCallback } from "react";
-import brimg1 from "../assets/browseimages/videocard1.png";
-import brimg2 from "../assets/browseimages/videocard2.png";
-import brimg3 from "../assets/browseimages/videocard3.png";
-import brimg4 from "../assets/browseimages/videocard4.png";
-import brimg5 from "../assets/browseimages/videocard5.png";
-import brimg6 from "../assets/browseimages/videocard6.png";
-import brimg7 from "../assets/browseimages/videocard7.png";
-import brimg8 from "../assets/browseimages/videocard8.png";
-import brimg9 from "../assets/browseimages/videocard9.png";
-import brimg10 from "../assets/browseimages/videocard10.png";
 import axios from "axios";
-import { create } from "ipfs-http-client";
-import Web3 from "web3";
-import OrbitDB from "orbit-db";
+import { connectToInfuraIpfs, connectToOrbitDb } from "../utils/ipfs";
 
-const ipfsOptions = {
-  EXPERIMENTAL: {
-    pubsub: true
-  },
-  repo: './ipfs'
-}
 
-const ipfs = create(process.env.REACT_APP_IPFS_URL, ipfsOptions);
 
-const web3 = new Web3(window.ethereum);
+var ipfs;
 
 function Browse() {
-  let { path, url } = useRouteMatch();
+
   const [ streams, setStreams ] = useState([]);
-  const [ isPageLoading, setIsPageLoading ] = useState(false);
   const [ db, setdb ] = useState();
+  const [ isPageLoading, setIsPageLoading ] = useState(false);
   const toast = useToast();
 
   const getTransmissions = useCallback(
     async () => {
-      const orbitdb = await OrbitDB.createInstance(ipfs);
-      let db = await orbitdb.docs("/orbitdb/zdpuAz6e2rGQ917hroubfJuazTQDTHdvDPhm7QhKkMiu64SD7/videosdb");
+      ipfs = await connectToInfuraIpfs();
+      let db = await connectToOrbitDb(ipfs, process.env.REACT_APP_ORBIT_DB_ADDRESS);
       await db.load();
       setdb(db);
       const instance = axios.create({
@@ -98,8 +69,12 @@ function Browse() {
 
 
   useEffect(() => {
-    // getTransmissions();
+    init();
   }, []);
+
+  const init = async () => {
+    getTransmissions();
+  }
 
   return (
     <Router>

@@ -25,17 +25,79 @@ import {
 function App() {
 
   const [currentAccount, setCurrentAccount] = useState(undefined);
-  // const [ chainId, setChainId ] = useState();
+  const [ chainId, setChainId ] = useState();
 
-  // useEffect(() => {
-  //   setChainId(window.ethereum.networkVersion);
-  // }, [])
+  useEffect(() => {
+    if(window.ethereum){
+      setChainId(window.ethereum.networkVersion);
+      console.log(chainId);
+      window.ethereum.on("chainChanged", (chainId) => {
+        setChainId(chainId);
+        console.log(chainId);
+      })
+    }
+  }, [])
 
   return (
     <>
       <ChakraProvider theme={theme}>
         <Router>
           <Header currentAccountSetter={setCurrentAccount} currentAccount={currentAccount} />
+          {
+            window.ethereum == undefined ?
+            <Modal
+              isOpen={true}
+              isCentered={true}
+              closeModalOnOverlayClick={false}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Metamask Not Installed!</ModalHeader>
+                  <ModalBody>
+                      Please Install Metamask.
+                  </ModalBody>
+                  <ModalFooter>
+                      <Link 
+                          href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en" 
+                          isExternal
+                      >
+                          <Button colorScheme="blue" mr={3} rightIcon={<FaExternalLinkAlt />}>
+                              Install On Chrome 
+                          </Button>
+                      </Link>
+                      <Link href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/" isExternal>
+                          <Button colorScheme="orange" rightIcon={<FaExternalLinkAlt />}>
+                              Install On Firefox 
+                          </Button>
+                      </Link>
+                      
+                  </ModalFooter>
+              </ModalContent>      
+            </Modal>
+            :
+            <>
+              {
+                chainId == "0x4" ?
+                null
+                :
+                <Modal
+                  isOpen={true}
+                  isCentered={true}
+                  closeModalOnOverlayClick={false}
+                >
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>Network Not Supported</ModalHeader>
+                    <ModalBody>
+                        Please Switch to Rinkeby Network.
+                    </ModalBody>
+                    <ModalFooter>                        
+                    </ModalFooter>
+                </ModalContent>      
+              </Modal>
+              }
+            </>
+          }
           <Switch>
             <Route exact path="/video/:id">
               <HomeScreen currentAccount={currentAccount} />
@@ -48,39 +110,7 @@ function App() {
             </Route>
           </Switch>
         </Router>
-        {
-          window.ethereum == undefined ?
-          <Modal
-            closeModalOnOverlayClick={false}
-          >
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Metamask Not Installed!</ModalHeader>
-                <ModalBody>
-                    Please Install Metamask.
-                </ModalBody>
-                <ModalFooter>
-                    <Link 
-                        href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en" 
-                        isExternal
-                    >
-                        <Button colorScheme="blue" mr={3} rightIcon={<FaExternalLinkAlt />}>
-                            Install On Chrome 
-                        </Button>
-                    </Link>
-                    <Link href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/" isExternal>
-                        <Button colorScheme="orange" rightIcon={<FaExternalLinkAlt />}>
-                            Install On Firefox 
-                        </Button>
-                    </Link>
-                    
-                </ModalFooter>
-            </ModalContent>      
-          </Modal>
-          :
-          null
-        }
-        {/* <NetworkModal isOpen={!(chainId == "137" || chainId == "4")} chainId={chainId} ethereum={window.ethereum} />  */}
+        
       </ChakraProvider>
     </>
   );

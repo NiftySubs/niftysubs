@@ -44,7 +44,6 @@ function Header({ currentAccountSetter, currentAccount }) {
     setIsLoading(true);
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts"});
     currentAccountSetter(accounts[0]);
-    console.log(accounts[0]);
     setIsLoading(false);
   }
 

@@ -41,17 +41,15 @@ import PublicLockABI from "../abis/publicLock";
 import { v4 as uuidv4 } from "uuid";
 import Web3 from "web3";
 import Identities from 'orbit-db-identity-provider';
-
+import { connectToInfuraIpfs, connectToOrbitDb } from "../utils/ipfs";
 
 const ipfsOptions = {
     EXPERIMENTAL: {
       pubsub: true
-    },
-    repo: './ipfs'
+    }
 }
 
-const ipfs = create(process.env.REACT_APP_IPFS_URL, ipfsOptions);
-
+var ipfs;
 const web3 = new Web3(window.ethereum);
 const unlockContract = new web3.eth.Contract(UnlockABI, "0xd8c88be5e8eb88e38e6ff5ce186d764676012b0b");
 
@@ -76,18 +74,14 @@ function Streams({ currentAccount }) {
     const options = { id: 'test1' }
 
     const getStreams = useCallback(async () => {
-        const orbitdb = await OrbitDB.createInstance(ipfs);
-        // const identity = await Identities.createIdentity(options);
-        // console.log(identity);
-        // const orbitdb = await OrbitDB.createInstance(ipfs, { identity: identity })
-        let db = await orbitdb.docs("/orbitdb/zdpuAz6e2rGQ917hroubfJuazTQDTHdvDPhm7QhKkMiu64SD7/videosdb");
+        ipfs = await connectToInfuraIpfs();
+        
+        let db = await connectToOrbitDb(ipfs, process.env.REACT_APP_ORBIT_DB_ADDRESS);
         console.log(db);
         await db.load();
         setdb(db);
         const streams = await db.query((docs) => docs.creator == currentAccount);
-        console.log(streams);
         setStreams([...streams]);
-        console.log(streams);
         setIsPageLoading(false);
     }, [currentAccount]);
 
@@ -127,10 +121,10 @@ function Streams({ currentAccount }) {
         setter(target.value);
     }
 
-    const sendData = async () => {
-        const hash1 = await db.put({ _id: 'QmAwesomeIpfsHash1', creator_Address: 'abcd1', stream_Url: 'xyz1', lockAddress: 'abc1', chatDBAddr: 'chat1'});
-        console.log(hash1);
-    }
+    // const sendData = async () => {
+    //     const hash1 = await db.put({ _id: 'QmAwesomeIpfsHash1', creator_Address: 'abcd1', stream_Url: 'xyz1', lockAddress: 'abc1', chatDBAddr: 'chat1'});
+    //     console.log(hash1);
+    // }
 
     const createStreamSubmit = async () => {
         setCreatingStream(true);

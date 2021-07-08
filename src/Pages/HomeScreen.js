@@ -12,36 +12,36 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useToast } from "@chakra-ui/react";
 
 var sf;
-var lockABI;
 var LockContract;
-
-const IconComponent = ({ src, link, name }) => {
-  return (
-    <a
-      className={`${name} mainIcon social-box w-inline-block`}
-      href={link}
-      rel="noreferrer"
-      target="_blank"
-    >
-      <img className="z-10 fimg" src={src} alt="icon" />
-    </a>
-  );
-};
+var web3;
+// var infuraWeb3 = new Web3("wss://rinkeby.infura.io/ws/v3/d769d792eb9f4c78a6593908021e32d7");
+// const IconComponent = ({ src, link, name }) => {
+//   return (
+//     <a
+//       className={`${name} mainIcon social-box w-inline-block`}
+//       href={link}
+//       rel="noreferrer"
+//       target="_blank"
+//     >
+//       <img className="z-10 fimg" src={src} alt="icon" />
+//     </a>
+//   );
+// };
 
 export default function HomeScreen({ currentAccount }) {
 
   const toast = useToast();
-  const [ isLocked, setIsLocked ] = useState(true);
-  const [ lockAddress, setLockAddress ] = useState("0x1708fA647995135A008B363E7a725AEb05aca32e");
+  const [ isLocked, setIsLocked ] = useState(false);
+  // const [ lockAddress, setLockAddress ] = useState("0x1708fA647995135A008B363E7a725AEb05aca32e");
   const [ blockNumber, setBlockNumber ] = useState();
   const [ sender, setSender ] = useState();
-  const [ web3, setWeb3 ] = useState();
   const [ isStartingFlow, setIsStartingFlow ] = useState(false);
   const [ isPageLoading, setIsPageLoading ] = useState(true);
 
 
 
   useEffect(() => {
+    // loading the fundraising widget.
     var loadScript = function (src) {
       var tag = document.createElement('script');
       tag.async = false;
@@ -60,24 +60,22 @@ export default function HomeScreen({ currentAccount }) {
 
 
   const init = async () => {
-    let web3 = new Web3(window.ethereum);
-    setWeb3(web3);
+    web3 = new Web3(window.ethereum);
 
-    let framework = new Framework({
+    sf = new Framework({
       ethers: new Web3Provider(window.ethereum),
       tokens: ['fUSDC']
     });
 
-    setSf(framework);
     await sf.initialize();
 
-    lockABI = `
-      event Transfer(address indexed from, address indexed to, uint256 value);
-      event CancelKey(key.tokenId, _keyOwner, msg.sender, refund);
-    `;
+    // lockABI = `
+    //   event Transfer(address indexed from, address indexed to, uint256 value);
+    //   event CancelKey(key.tokenId, _keyOwner, msg.sender, refund);
+    // `;
 
 
-    LockContract = new web3.eth.Contract(publicLockABI, lockAddress);
+    LockContract = new web3.eth.Contract(publicLockABI, "0x471510Cc19959e8207F68Da71c9f311e8848C424");
 
     setBlockNumber(await web3.eth.getBlockNumber());
 
@@ -85,16 +83,20 @@ export default function HomeScreen({ currentAccount }) {
     LockContract.events.Transfer({filter: {to: currentAccount}, fromBlock: blockNumber}, (e) => {
     })
     .on("connected", (subscriptionId) => {
+      console.log(subscriptionId);
     })
     .on("data", (e) => {
+      console.log("Key Granted");
       setIsLocked(false);
     })
 
     LockContract.events.CancelKey({filter: {to: currentAccount}, fromBlock: blockNumber}, (e) => {
     })
     .on("connected", (subscriptionId) => {
+      console.log(subscriptionId);
     })
     .on("data", (e) => {
+      console.log("Key Cancelled!")
       setIsLocked(true);
     })
 
@@ -103,8 +105,8 @@ export default function HomeScreen({ currentAccount }) {
 
   const changeFlowSender = async (currentAccount) => {
     const bob = sf.user({address: currentAccount, token: sf.tokens.fUSDCx.address});
-    let details = await bob.details(); 
-    console.log(details);
+    // let details = await bob.details(); 
+    // console.log(details);
     setSender(bob);
     setIsPageLoading(false);
   }
@@ -114,7 +116,7 @@ export default function HomeScreen({ currentAccount }) {
     const carol = sf.user({address: "0xc309a55038868645ff39889d143436d2D6C109bE", token: sf.tokens.fUSDCx.address});
     const userData = await web3.eth.abi.encodeParameters(
       ["address"],
-      ["0x1708fA647995135A008B363E7a725AEb05aca32e"]
+      ["0x471510Cc19959e8207F68Da71c9f311e8848C424"]
     );
     const tx = sender.flow({
       recipient: carol,
@@ -199,6 +201,7 @@ export default function HomeScreen({ currentAccount }) {
                 <video
                 className="video-border"
                 controls
+                autoplay="true"
                 src={c2c}
                 type="video/mp4"
                 width="100%"
@@ -238,7 +241,7 @@ export default function HomeScreen({ currentAccount }) {
                 </HStack>
               </HStack>
               <Box width="100%">
-                <div id="fundraising-widget-container" data-fundraise-id="0" data-payable="true"></div>
+                <div id="fundraising-widget-container" data-fundraise-id="6" data-payable="true"></div>
               </Box>
             </VStack>
             
@@ -270,7 +273,7 @@ export default function HomeScreen({ currentAccount }) {
               </div>
             </div> */}
           </VStack>
-          <ChatInterface isLocked={isLocked} currentAccount={currentAccount} />
+          <ChatInterface pubsubTopic="60e2fffd61b758393271368c" isLocked={isLocked} currentAccount={currentAccount} />
           
         </HStack>
       </HStack>
