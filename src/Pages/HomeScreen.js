@@ -31,7 +31,7 @@ var web3;
 export default function HomeScreen({ currentAccount }) {
 
   const toast = useToast();
-  const [ isLocked, setIsLocked ] = useState(false);
+  const [ isLocked, setIsLocked ] = useState(true);
   // const [ lockAddress, setLockAddress ] = useState("0x1708fA647995135A008B363E7a725AEb05aca32e");
   const [ blockNumber, setBlockNumber ] = useState();
   const [ sender, setSender ] = useState();
@@ -113,7 +113,7 @@ export default function HomeScreen({ currentAccount }) {
 
   const startFlow = async (flowRate) => {
     setIsStartingFlow(true);
-    const carol = sf.user({address: "0xc309a55038868645ff39889d143436d2D6C109bE", token: sf.tokens.fUSDCx.address});
+    const carol = sf.user({address: "0x2315Bee2753A0985B529f34fFbeA8636532dBF92", token: sf.tokens.fUSDCx.address});
     const userData = await web3.eth.abi.encodeParameters(
       ["address"],
       ["0x471510Cc19959e8207F68Da71c9f311e8848C424"]
