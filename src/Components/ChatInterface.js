@@ -175,7 +175,7 @@ function ChatInterface({ currentAccount, isLocked, pubsubTopic }) {
                                 }
                             </VStack>  
                         </VStack>
-                        <Box>
+                        <Box width="100%">
                             {
                                 isLocked ? 
                                 <VStack alignItems="center" mt="40px !important" justifySelf="flex-end" justifyItems="center" width="100%">
