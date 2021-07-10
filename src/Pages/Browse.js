@@ -26,7 +26,7 @@ function Browse() {
 
   const [ streams, setStreams ] = useState([]);
   const [ db, setdb ] = useState();
-  const [ isPageLoading, setIsPageLoading ] = useState(false);
+  const [ isPageLoading, setIsPageLoading ] = useState(true);
   const toast = useToast();
 
   const getTransmissions = useCallback(
@@ -41,17 +41,22 @@ function Browse() {
       instance.defaults.headers.common["Authorization"] = `Token ${process.env.REACT_APP_VOODFY_ACCESS_TOKEN}`;
       instance.get("/v1/transmissions")
       .then(async (response) => {
-          let transmissionsId = [...response.data.result.transmissions];
-          var streams = [];
+          console.log(response);
+          if(response.data.result.transmissions != null) {
+            let transmissionsId = [...response.data.result.transmissions];
+            var streams = [];
           
-          for (const id of transmissionsId) {
-            let transmission = await db.query((docs) => docs._id == id._id);
-            console.log(transmission);
-            streams.push(transmission);
+            for (const id of transmissionsId) {
+              let transmission = await db.query((docs) => docs._id == id._id);
+              console.log(transmission);
+              streams.push(transmission);
+            }
+            console.log(streams);
+            setStreams([...streams]);
+            console.log(streams);
+          
           }
-          console.log(streams);
-          setStreams([...streams]);
-          console.log(streams);
+          
           setIsPageLoading(false);
       })
       .catch((error) => {
