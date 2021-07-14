@@ -29,7 +29,7 @@ function Dashboard({ currentAccount }) {
                     </VStack>
                     <VStack alignSelf="flex-start" width="100%">
                         <Switch>
-                            <Route exact path={`${path}/streams`}>
+                            <Route exact path={`${path}/`}>
                                 <Streams currentAccount={currentAccount} />
                             </Route>
                             <Route exact  path={`${path}/superchats`}>

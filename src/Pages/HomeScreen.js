@@ -1,44 +1,54 @@
 import "./HomeScreen.css";
 import c2c from "../assets/c2caftermovie.mp4";
-import dummyimage from "../assets/rishabh-profile.jpg";
-import icons from "./socialicondata";
-import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text, StatGroup } from "@chakra-ui/react";
+import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text, Avatar, Skeleton, SkeletonCircle, SkeletonText, Stack } from "@chakra-ui/react";
 import ChatInterface from "../Components/ChatInterface.js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import publicLockABI from "../abis/publicLock";
 import Web3 from "web3";
 import { Framework } from "@superfluid-finance/js-sdk";
 import { Web3Provider } from "@ethersproject/providers";
 import { useToast } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
+import { getClient, queryThread } from "../utils/textile";
+import { Where } from "@textile/hub-threads-client";
+import svgAvatarGenerator from "../utils/avatar";
 
 var sf;
 var LockContract;
 var web3;
-// var infuraWeb3 = new Web3("wss://rinkeby.infura.io/ws/v3/d769d792eb9f4c78a6593908021e32d7");
-// const IconComponent = ({ src, link, name }) => {
-//   return (
-//     <a
-//       className={`${name} mainIcon social-box w-inline-block`}
-//       href={link}
-//       rel="noreferrer"
-//       target="_blank"
-//     >
-//       <img className="z-10 fimg" src={src} alt="icon" />
-//     </a>
-//   );
-// };
+
+const ACTIONS = {
+  SET_LOCK_ADDRESS: 'set-lock-address',
+  SET_BLOCK_NUMBER: 'set-block-number',
+  SET_SENDER: 'set-sender',
+  SET_VIDEO: 'set-video'
+}
+
+function stateReducer(state, action) {
+  switch(action.type) {
+    case ACTIONS.SET_LOCK_ADDRESS:
+      return { ...state, lockAddress: action.payload };
+    case ACTIONS.SET_BLOCK_NUMBER:
+      return { ...state, blockNumber: action.payload };
+    case ACTIONS.SET_SENDER:
+      return { ...state, sender: action.payload };
+    case ACTIONS.SET_VIDEO:
+      return { ...state, video: action.payload };
+    default:
+      return state;
+  }
+}
 
 export default function HomeScreen({ currentAccount }) {
 
   const toast = useToast();
   const [ isLocked, setIsLocked ] = useState(true);
-  // const [ lockAddress, setLockAddress ] = useState("0x1708fA647995135A008B363E7a725AEb05aca32e");
-  const [ blockNumber, setBlockNumber ] = useState();
-  const [ sender, setSender ] = useState();
   const [ isStartingFlow, setIsStartingFlow ] = useState(false);
   const [ isPageLoading, setIsPageLoading ] = useState(true);
+  const { id } = useParams(); 
+  const [ isSuperFluidLoading, setIsSuperFluidIsLoading ] = useState(false);
 
-
+  const [ state, dispatch ] = useReducer(stateReducer, { lockAddress: "", blockNumber: "", sender: "", video: {} });
 
   useEffect(() => {
     // loading the fundraising widget.
@@ -50,16 +60,35 @@ export default function HomeScreen({ currentAccount }) {
       body.appendChild(tag);
     }
     loadScript("https://niftysubs.github.io/fundraising-widget/main.js");
+    
+
+    getVideoData();
   }, []);
 
   useEffect(() => {
-    if(currentAccount) {
+    if(currentAccount != undefined)
       init();
-    }
-  },[currentAccount])
+  }, [currentAccount]);
 
+  const getVideoData = async () => {
+    let client = await getClient();
+    let query = new Where("videoId").eq(id);
+    let video = await queryThread(client, process.env.REACT_APP_TEXTILE_THREAD_ID, "videoData", query);
+    dispatch({ type: ACTIONS.SET_LOCK_ADDRESS, payload: video[0].lockAddress });
+    dispatch({ type: ACTIONS.SET_VIDEO, payload: video[0] });    
+
+    
+
+    setIsPageLoading(false);
+  }
+
+  useEffect(() => {
+    
+  }, [isLocked])
 
   const init = async () => {
+    console.log(state);
+    setIsSuperFluidIsLoading(true);
     web3 = new Web3(window.ethereum);
 
     sf = new Framework({
@@ -69,18 +98,12 @@ export default function HomeScreen({ currentAccount }) {
 
     await sf.initialize();
 
-    // lockABI = `
-    //   event Transfer(address indexed from, address indexed to, uint256 value);
-    //   event CancelKey(key.tokenId, _keyOwner, msg.sender, refund);
-    // `;
+    LockContract = new web3.eth.Contract(publicLockABI, state.video.lockAddress);
 
+    let blockNumber = await web3.eth.getBlockNumber();
+    dispatch({ type: ACTIONS.SET_BLOCK_NUMBER, payload: blockNumber });
 
-    LockContract = new web3.eth.Contract(publicLockABI, "0x471510Cc19959e8207F68Da71c9f311e8848C424");
-
-    setBlockNumber(await web3.eth.getBlockNumber());
-
-
-    LockContract.events.Transfer({filter: {to: currentAccount}, fromBlock: blockNumber}, (e) => {
+    LockContract.events.Transfer({filter: {to: currentAccount}, fromBlock: state.blockNumber}, (e) => {
     })
     .on("connected", (subscriptionId) => {
       console.log(subscriptionId);
@@ -90,13 +113,13 @@ export default function HomeScreen({ currentAccount }) {
       setIsLocked(false);
     })
 
-    LockContract.events.CancelKey({filter: {to: currentAccount}, fromBlock: blockNumber}, (e) => {
+    LockContract.events.CancelKey({filter: {to: currentAccount}, fromBlock: state.blockNumber}, (e) => {
     })
     .on("connected", (subscriptionId) => {
       console.log(subscriptionId);
     })
     .on("data", (e) => {
-      console.log("Key Cancelled!")
+      console.log("Key Cancelled!");
       setIsLocked(true);
     })
 
@@ -105,20 +128,18 @@ export default function HomeScreen({ currentAccount }) {
 
   const changeFlowSender = async (currentAccount) => {
     const bob = sf.user({address: currentAccount, token: sf.tokens.fUSDCx.address});
-    // let details = await bob.details(); 
-    // console.log(details);
-    setSender(bob);
-    setIsPageLoading(false);
+    dispatch({ type: ACTIONS.SET_SENDER, payload: bob });
+    setIsSuperFluidIsLoading(false);
   }
 
   const startFlow = async (flowRate) => {
     setIsStartingFlow(true);
-    const carol = sf.user({address: "0x2315Bee2753A0985B529f34fFbeA8636532dBF92", token: sf.tokens.fUSDCx.address});
+    const carol = sf.user({address: process.env.REACT_APP_SUPERAPP_ADDRESS, token: sf.tokens.fUSDCx.address});
     const userData = await web3.eth.abi.encodeParameters(
       ["address"],
-      ["0x471510Cc19959e8207F68Da71c9f311e8848C424"]
+      [state.video.lockAddress]
     );
-    const tx = sender.flow({
+    const tx = state.sender.flow({
       recipient: carol,
       flowRate,
       userData,
@@ -183,52 +204,70 @@ export default function HomeScreen({ currentAccount }) {
         <HStack width="80vw" alignItems="flex-start" backgroundColor="#EFEFF1" height="100%" className="mainsection">
           <VStack overflowY="scroll" height="100%" className="videosection">
             <div className="window__frame__image">
-              {
-                isLocked ? 
-                <VStack height="65vh" alignItems="center" justifyContent="center">
+                <Skeleton isLoaded={!isPageLoading}>
                   {
-                    currentAccount && !isPageLoading ? 
-                    <VStack spacing={5}>
-                      <Text>Please start your money stream to watch.</Text>
-                      <Heading>10 USDC / Month</Heading> 
-                      <Button isLoading={isStartingFlow} onClick={() => startFlow("3858024691358")} className="subscribebutton" backgroundColor="black"  color="white" leftIcon={<Image filter="invert(1)" backgroundColor="transparent" borderRadius="2px" width="20px" height="20px" src="https://gblobscdn.gitbook.com/spaces%2F-MKEcOOf_qoYMObicyRu%2Favatar-1603361891616.png?alt=media" />}>Start Watching</Button>
+                    isLocked ? 
+                    <VStack height="65vh" alignItems="center" justifyContent="center">
+                      {
+                        currentAccount && !isSuperFluidLoading ? 
+                        <VStack spacing={5}>
+                          <Text>Please start your money stream to watch.</Text>
+                          <Heading>10 USDC / Month</Heading> 
+                          <Button isLoading={isStartingFlow} onClick={() => startFlow("3858024691358")} className="subscribebutton" backgroundColor="black"  color="white" leftIcon={<Image filter="invert(1)" backgroundColor="transparent" borderRadius="2px" width="20px" height="20px" src="https://gblobscdn.gitbook.com/spaces%2F-MKEcOOf_qoYMObicyRu%2Favatar-1603361891616.png?alt=media" />}>Start Watching</Button>
+                        </VStack>
+                        :
+                        <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">Connect Wallet First</Tag>
+                      }
                     </VStack>
-                    :
-                    <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">Connect Wallet First</Tag>
+                    : 
+                    <video
+                      className="video-border"
+                      autoplay="true"
+                      src="https://embed.voodfy.com/25ca5068-4eb7-49ba-9376-70322f2ee220"
+                      // src={`https://embed.voodfy.com/${state.video.videoId}`}
+                      width="100%"
+                      controls
+                    />
                   }
-                </VStack>
-                : 
-                <video
-                className="video-border"
-                controls
-                autoplay="true"
-                src={c2c}
-                type="video/mp4"
-                width="100%"
-              />
-              }              
+                </Skeleton>
             </div>
             <VStack width="100%">
-              <HStack spacing={5} className="videoinfo">
+              <HStack alignItems="flex-start" spacing={5} className="videoinfo">
                 <Flex className="videocreatorimage" justifySelf="flex-start" justifyContent="flex-start" alignContent="flex-start">
                   <Box borderStyle="solid" padding="2px" borderRadius="50%" borderWidth="3px" borderColor="#E6017A">
-                    <Image
-                      className="creatorimage"
-                      src={dummyimage}
-                      alt="creator profile"
-                    />
+                    {
+                      isPageLoading ?
+                      <SkeletonCircle size="60px" />
+                      :
+                      <Avatar size="lg" src={svgAvatarGenerator(state.video.currentAccount, { dataUri: true })} />
+                    }
                   </Box>
                 </Flex>
                 <VStack justifyContent="flex-start" alignItems="flex-start" className="videodetails">
-                  <Heading as="h6" fontSize="20px" className="creatorname">KasparvoChess</Heading>
-                  <Text className="videotitle">
-                    Grand Chess Tour 2021 - Paris Rapid Day 3 | kasparovchess.com
-                  </Text>
-                  <HStack className="videogenre">
+                  {
+                    isPageLoading ?
+                    <Stack>
+                      <Skeleton>
+                        Stream Title and some long placeholder text
+                      </Skeleton>
+                      <Skeleton>
+                        creator address
+                      </Skeleton>
+                    </Stack>
+                    :
+                    <>
+                      <Heading as="h6" fontSize="20px" className="creatorname">{state.video.streamTitle}</Heading>
+                      <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A" className="videotitle">
+                        {`${state.video.currentAccount.substr(0,6)}...${state.video.currentAccount.substr(-4)}`}
+                      </Tag>
+                    </>
+                  }
+                  {/* Tags */}
+                  {/* <HStack className="videogenre">
                     <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">Chess</Tag>
                     <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">English</Tag>
                     <Tag backgroundColor="rgba(230,1,122,0.08)" color="#E6017A">Strategy</Tag>
-                  </HStack>
+                  </HStack> */}
                 </VStack>
                 <Spacer/>
                 <HStack alignItems="center" justifyContent="center" justifyItems="center" justifySelf="center" alignSelf="center" alignContent="center">
@@ -244,37 +283,8 @@ export default function HomeScreen({ currentAccount }) {
                 <div id="fundraising-widget-container" data-fundraise-id="6" data-payable="true"></div>
               </Box>
             </VStack>
-            
-            {/* <div className="creatordetails">
-              <div>
-                <img
-                  className="creatorprofile"
-                  src={dummyimage}
-                  alt="creator profile"
-                />
-              </div>
-              <div className="creatorprofiledesc">
-                <div className="creatortitle">About KasparvoChess</div>
-                <div className="creatorbio">
-                  Learn. Watch. Play on https://kasparovchess.com
-                </div>
-              </div>
-              <div className="socialiconcontainer">
-                <div className="icons">
-                  {icons.map((icon, key) => (
-                    <IconComponent
-                      key={key}
-                      src={icon.src}
-                      name={icon.name}
-                      link={icon.link}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div> */}
           </VStack>
-          <ChatInterface pubsubTopic="60e2fffd61b758393271368c" isLocked={isLocked} currentAccount={currentAccount} />
-          
+          <ChatInterface pubsubTopic={state.video.videoId} isLocked={isLocked} currentAccount={currentAccount} />
         </HStack>
       </HStack>
     </div>

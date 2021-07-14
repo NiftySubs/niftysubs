@@ -42,6 +42,7 @@ import { v4 as uuidv4 } from "uuid";
 import Web3 from "web3";
 import Identities from 'orbit-db-identity-provider';
 import { connectToInfuraIpfs, connectToOrbitDb } from "../utils/ipfs";
+import { addToThread, getClient } from '../utils/textile';
 
 const ipfsOptions = {
     EXPERIMENTAL: {
@@ -68,6 +69,7 @@ function Streams({ currentAccount }) {
     const [ db, setdb ] = useState();
     const [ loadingText, setLoadingText ] = useState("");
     const [ streams, setStreams ] = useState([]);
+    const [ client, setClient ] = useState();
     const [ isPageLoading, setIsPageLoading ] = useState(true);
     // const streams = [{imageUrl: "https://ipfs.io/ipfs/QmVv8U6UiZQEchGXKRnFnYNmMXsCdyQR1n8YzGk66fYJv3", streamTitle: "First Stream", status: "created" }]
 
@@ -81,6 +83,8 @@ function Streams({ currentAccount }) {
         await db.load();
         setdb(db);
         const streams = await db.query((docs) => docs.creator == currentAccount);
+        let textileClient = await getClient();
+        setClient(textileClient);
         setStreams([...streams]);
         setIsPageLoading(false);
     }, [currentAccount]);
@@ -121,11 +125,6 @@ function Streams({ currentAccount }) {
         setter(target.value);
     }
 
-    // const sendData = async () => {
-    //     const hash1 = await db.put({ _id: 'QmAwesomeIpfsHash1', creator_Address: 'abcd1', stream_Url: 'xyz1', lockAddress: 'abc1', chatDBAddr: 'chat1'});
-    //     console.log(hash1);
-    // }
-
     const createStreamSubmit = async () => {
         setCreatingStream(true);
         setAfterStreamCreated(false);
@@ -147,6 +146,9 @@ function Streams({ currentAccount }) {
             setStreamKey(streamKey);
             console.log(response);
             setLoadingText("Creating Lock");
+            // await addDataToDatabase(videoId, streamTitle, streamDescription, posterUrl, currentAccount, streamUrl, "");
+            // setAfterStreamCreated(true);
+            // setCreatingStream(false);
             createLock(videoId);
         })
         .catch((error) => {
@@ -176,17 +178,26 @@ function Streams({ currentAccount }) {
             makeSuperAppLockManager(lockAddress, videoId);
         })
         .catch((error, receipt) => {
+            setCreatingStream(false);
+            toast({
+                position: "bottom-right",
+                title: `Rejected!`,
+                status: "error",
+                isClosable: true
+            }) 
             console.log(error);
         })
     }
 
     const makeSuperAppLockManager = async (lockAddress, videoId) => {
         const PublicLockContract = new web3.eth.Contract(PublicLockABI, lockAddress);
-        PublicLockContract.methods.addLockManager("0xc309a55038868645ff39889d143436d2D6C109bE").send({ from: currentAccount })
+        PublicLockContract.methods.addLockManager(process.env.REACT_APP_SUPERAPP_ADDRESS).send({ from: currentAccount })
         .then(async (receipt) => {
             setLoadingText("Storing Video Data");
-            const hash = await db.put({ _id: videoId, streamTitle, streamDescription, posterUrl, creator: currentAccount, pubsubTopic: videoId, streamUrl: `https://embed.voodfy.com/${videoId}`, lockAddress: lockAddress });
-            console.log(hash);
+            const streamUrl = `https://embed.voodfy.com/${videoId}`;
+            await addDataToDatabase(videoId, streamTitle, streamDescription, posterUrl, currentAccount, streamUrl, lockAddress);
+            // const hash = await db.put({ _id: videoId, streamTitle, streamDescription, posterUrl, creator: currentAccount, pubsubTopic: videoId, streamUrl: `https://embed.voodfy.com/${videoId}`, lockAddress: lockAddress });
+            // console.log(hash);
             let stream = { _id: videoId, streamTitle, streamDescription, posterUrl, creator: currentAccount, pubsubTopic: videoId, streamUrl: `https://embed.voodfy.com/${videoId}`, lockAddress: lockAddress };
             setStreams(streams => [...streams, stream]);  
             console.log(streams); 
@@ -202,6 +213,10 @@ function Streams({ currentAccount }) {
             console.log(error);
         });
         setLoadingText("Making SuperApp Lock Manager");
+    }
+
+    const addDataToDatabase = async (videoId, streamTitle, streamDescription, posterUrl, currentAccount, streamUrl, lockAddress) => {
+        await addToThread(client, process.env.REACT_APP_TEXTILE_THREAD_ID, "videoData", [{ videoId, streamTitle, streamDescription, posterUrl, currentAccount, videoId, streamUrl, lockAddress }]);
     }
 
     return (
