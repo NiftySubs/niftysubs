@@ -65,18 +65,13 @@ export default function HomeScreen({ currentAccount }) {
     getVideoData();
   }, []);
 
-  useEffect(() => {
-    if(currentAccount != undefined)
-      init();
-  }, [currentAccount]);
-
   const getVideoData = async () => {
     let client = await getClient();
     let query = new Where("videoId").eq(id);
     let video = await queryThread(client, process.env.REACT_APP_TEXTILE_THREAD_ID, "videoData", query);
     dispatch({ type: ACTIONS.SET_LOCK_ADDRESS, payload: video[0].lockAddress });
     dispatch({ type: ACTIONS.SET_VIDEO, payload: video[0] });    
-
+    init();
     setIsPageLoading(false);
   }
 
@@ -219,7 +214,7 @@ export default function HomeScreen({ currentAccount }) {
                     <video
                       className="video-border"
                       autoplay="true"
-                      src="https://embed.voodfy.com/25ca5068-4eb7-49ba-9376-70322f2ee220"
+                      src="../assets/c2caftermovie.mp4"
                       // src={`https://embed.voodfy.com/${state.video.videoId}`}
                       width="100%"
                       controls
