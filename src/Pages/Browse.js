@@ -171,7 +171,7 @@ function Browse() {
                 state.streams.map((stream) => {
                   return(
                     <Link key={stream._id} to={`/video/${stream.videoId}`}>
-                      <VStack _hover={{ bg: "gray.200" }} alignItems="flex-start">
+                      <VStack alignItems="flex-start">
                         <Image width="300px" src={stream.posterUrl} />
                         <HStack py={2} px={0} spacing={4} alignItems="flex-start">
                           <Avatar borderStyle="solid" borderColor="#E6017A" borderWidth="2px" padding="1px" size="md" bg="transparent" src={svgAvatarGenerator(stream.currentAccount, { dataUri: true })} />

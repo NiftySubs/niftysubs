@@ -1,6 +1,6 @@
 import "./HomeScreen.css";
 import c2c from "../assets/c2caftermovie.mp4";
-import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text, Avatar, Skeleton, SkeletonCircle, SkeletonText, Stack } from "@chakra-ui/react";
+import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text, Avatar, Skeleton, SkeletonCircle, Stack, Spinner } from "@chakra-ui/react";
 import ChatInterface from "../Components/ChatInterface.js";
 import { useState, useEffect, useReducer } from "react";
 import publicLockABI from "../abis/publicLock";
@@ -48,7 +48,7 @@ export default function HomeScreen({ currentAccount }) {
   const { id } = useParams(); 
   const [ isSuperFluidLoading, setIsSuperFluidIsLoading ] = useState(false);
 
-  const [ state, dispatch ] = useReducer(stateReducer, { lockAddress: "", blockNumber: "", sender: "", video: {} });
+  const [ state, dispatch ] = useReducer(stateReducer, { lockAddress: "", sender: "", video: {} });
 
   useEffect(() => {
     // loading the fundraising widget.
@@ -77,14 +77,8 @@ export default function HomeScreen({ currentAccount }) {
     dispatch({ type: ACTIONS.SET_LOCK_ADDRESS, payload: video[0].lockAddress });
     dispatch({ type: ACTIONS.SET_VIDEO, payload: video[0] });    
 
-    
-
     setIsPageLoading(false);
   }
-
-  useEffect(() => {
-    
-  }, [isLocked])
 
   const init = async () => {
     console.log(state);
@@ -100,10 +94,14 @@ export default function HomeScreen({ currentAccount }) {
 
     LockContract = new web3.eth.Contract(publicLockABI, state.video.lockAddress);
 
-    let blockNumber = await web3.eth.getBlockNumber();
-    dispatch({ type: ACTIONS.SET_BLOCK_NUMBER, payload: blockNumber });
+    await subscribeToLockEvents();
 
-    LockContract.events.Transfer({filter: {to: currentAccount}, fromBlock: state.blockNumber}, (e) => {
+    changeFlowSender(currentAccount);
+  }
+
+  const subscribeToLockEvents = async () => {
+
+    LockContract.events.Transfer({filter: {to: currentAccount}, fromBlock: 0}, (e) => {
     })
     .on("connected", (subscriptionId) => {
       console.log(subscriptionId);
@@ -113,7 +111,7 @@ export default function HomeScreen({ currentAccount }) {
       setIsLocked(false);
     })
 
-    LockContract.events.CancelKey({filter: {to: currentAccount}, fromBlock: state.blockNumber}, (e) => {
+    LockContract.events.CancelKey({filter: {to: currentAccount}, fromBlock: 0}, (e) => {
     })
     .on("connected", (subscriptionId) => {
       console.log(subscriptionId);
@@ -122,8 +120,6 @@ export default function HomeScreen({ currentAccount }) {
       console.log("Key Cancelled!");
       setIsLocked(true);
     })
-
-    changeFlowSender(currentAccount);
   }
 
   const changeFlowSender = async (currentAccount) => {
@@ -284,7 +280,12 @@ export default function HomeScreen({ currentAccount }) {
               </Box>
             </VStack>
           </VStack>
-          <ChatInterface pubsubTopic={state.video.videoId} isLocked={isLocked} currentAccount={currentAccount} />
+          {
+            isPageLoading ?
+            <Tag>Loading</Tag>
+            :
+            <ChatInterface pubsubTopic={state.video.videoId} isLocked={isLocked} creatorAccount={state.video.currentAccount} currentAccount={currentAccount} /> 
+          }
         </HStack>
       </HStack>
     </div>

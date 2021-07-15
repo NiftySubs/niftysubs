@@ -30,10 +30,8 @@ import {
     Td,
     useToast
 } from "@chakra-ui/react";
-import { init } from "events";
 import { create } from "ipfs-http-client";
-import OrbitDB from "orbit-db";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useReducer } from "react";
 import axios from "axios";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import UnlockABI from "../abis/unlock";
@@ -42,11 +40,28 @@ import { v4 as uuidv4 } from "uuid";
 import Web3 from "web3";
 import Identities from 'orbit-db-identity-provider';
 import { connectToInfuraIpfs, connectToOrbitDb } from "../utils/ipfs";
-import { addToThread, getClient } from '../utils/textile';
+import { addToThread, getClient, queryThread } from '../utils/textile';
+import { Where } from "@textile/hub";
 
 const ipfsOptions = {
     EXPERIMENTAL: {
       pubsub: true
+    }
+}
+
+const ACTIONS = {
+    SET_STREAMS: "set-streams",
+    SET_CLIENT: "set-client"
+}
+
+function stateReducer(state, action) {
+    switch(action.type) {
+        case ACTIONS.SET_STREAMS:
+            return { ...state, streams: [...action.payload] };
+        case ACTIONS.SET_CLIENT:
+            return { ...state, client: action.payload };
+        default: 
+            return state;
     }
 }
 
@@ -66,38 +81,27 @@ function Streams({ currentAccount }) {
     const [ lockAddress, setLockAddress ] = useState("");
     const [ afterStreamCreated, setAfterStreamCreated ] = useState(false);
     const [ creatingStream, setCreatingStream ] = useState(false);
-    const [ db, setdb ] = useState();
     const [ loadingText, setLoadingText ] = useState("");
     const [ streams, setStreams ] = useState([]);
-    const [ client, setClient ] = useState();
     const [ isPageLoading, setIsPageLoading ] = useState(true);
-    // const streams = [{imageUrl: "https://ipfs.io/ipfs/QmVv8U6UiZQEchGXKRnFnYNmMXsCdyQR1n8YzGk66fYJv3", streamTitle: "First Stream", status: "created" }]
+    const [ state, dispatch ] = useReducer(stateReducer, { client: "", streams: [] });
 
-    const options = { id: 'test1' }
-
-    const getStreams = useCallback(async () => {
+    const getStreams = async () => {
         ipfs = await connectToInfuraIpfs();
-        
-        let db = await connectToOrbitDb(ipfs, process.env.REACT_APP_ORBIT_DB_ADDRESS);
-        console.log(db);
-        await db.load();
-        setdb(db);
-        const streams = await db.query((docs) => docs.creator == currentAccount);
         let textileClient = await getClient();
-        setClient(textileClient);
-        setStreams([...streams]);
+        console.log(textileClient);
+        dispatch({ type: ACTIONS.SET_CLIENT, payload: textileClient });
+        let query = new Where("currentAccount").eq(currentAccount);
+        let streams = await queryThread(textileClient, process.env.REACT_APP_TEXTILE_THREAD_ID, "videoData", query);
+        console.log(streams);
+        dispatch({ type: ACTIONS.SET_STREAMS, payload: streams });
         setIsPageLoading(false);
-    }, [currentAccount]);
-
-    useEffect(() => {
-        getStreams();
-    }, [getStreams]);
-
-    const init = async () => {
-        getStreams();
     }
 
-    
+    useEffect(() => {
+        if(currentAccount)
+            getStreams();
+    }, [currentAccount]);
 
     const handleImageUpload = async ({ target }) => {
         setIsUploadingImage(true);        
@@ -216,7 +220,7 @@ function Streams({ currentAccount }) {
     }
 
     const addDataToDatabase = async (videoId, streamTitle, streamDescription, posterUrl, currentAccount, streamUrl, lockAddress) => {
-        await addToThread(client, process.env.REACT_APP_TEXTILE_THREAD_ID, "videoData", [{ videoId, streamTitle, streamDescription, posterUrl, currentAccount, videoId, streamUrl, lockAddress }]);
+        await addToThread(state.client, process.env.REACT_APP_TEXTILE_THREAD_ID, "videoData", [{ videoId, streamTitle, streamDescription, posterUrl, currentAccount, videoId, streamUrl, lockAddress }]);
     }
 
     return (
@@ -240,7 +244,7 @@ function Streams({ currentAccount }) {
                     </Thead>
                     <Tbody>
                         {
-                            streams.map((stream) => {
+                            state.streams.map((stream) => {
                                 return (
                                     <Tr key={stream._id}>
                                         <Td>

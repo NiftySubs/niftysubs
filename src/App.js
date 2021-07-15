@@ -30,11 +30,9 @@ function App() {
 
   useEffect(() => {
     if(window.ethereum && currentAccount){
-      console.log(window.ethereum.networkVersion);
       setChainId(window.ethereum.networkVersion);
       window.ethereum.on("chainChanged", (newChainId) => {
         setChainId(newChainId.substr(-1, 1));
-        console.log(chainId);
       })
     }
   }, [currentAccount]);

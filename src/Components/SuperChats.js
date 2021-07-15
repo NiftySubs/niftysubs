@@ -107,7 +107,7 @@ function SuperChats({ currentAccount }) {
                                 :
                                 superChatSent.map((superchat) => {
                                     return (
-                                        <Tr>
+                                        <Tr key={superchat["id"]}>
                                             <Td>
                                                 <Text>
                                                     {`${superchat["receiver"].substr(0,5)}...${superchat["receiver"].substr(-5)}`}
