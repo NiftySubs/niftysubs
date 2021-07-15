@@ -1,7 +1,7 @@
 import './App.css';
 import HomeScreen from './Pages/HomeScreen';
 import Header from "./Components/Header";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import theme from "./theme";
 import NetworkModal from "./Components/NetworkModal";
@@ -27,16 +27,16 @@ function App() {
   const [currentAccount, setCurrentAccount] = useState(undefined);
   const [ chainId, setChainId ] = useState();
 
+
   useEffect(() => {
-    if(window.ethereum){
+    if(window.ethereum && currentAccount){
       setChainId(window.ethereum.networkVersion);
-      console.log(chainId);
-      window.ethereum.on("chainChanged", (chainId) => {
-        setChainId(chainId);
-        console.log(chainId);
+      window.ethereum.on("chainChanged", (newChainId) => {
+        setChainId(newChainId.substr(-1, 1));
       })
     }
-  }, [])
+  }, [currentAccount]);
+
 
   return (
     <>
@@ -77,7 +77,7 @@ function App() {
             :
             <>
               {
-                chainId == "0x4" ?
+                chainId == "4" || chainId == undefined ?
                 null
                 :
                 <Modal

@@ -48,7 +48,6 @@ function ChatInterface({ currentAccount, isLocked, pubsubTopic }) {
     }, [currentAccount]);
     
     useEffect(() => {
-        console.log(messages);
     }, [messages, isLocked]);
 
     const setCurrentAccount = async () => {
