@@ -17,6 +17,7 @@ var sf;
 var LockContract;
 var web3;
 
+
 const ACTIONS = {
   SET_LOCK_ADDRESS: 'set-lock-address',
   SET_BLOCK_NUMBER: 'set-block-number',
@@ -65,18 +66,22 @@ export default function HomeScreen({ currentAccount }) {
     getVideoData();
   }, []);
 
+  useEffect(() => {
+    if(currentAccount)
+      init();
+  }, [currentAccount])
+
   const getVideoData = async () => {
     let client = await getClient();
     let query = new Where("videoId").eq(id);
     let video = await queryThread(client, process.env.REACT_APP_TEXTILE_THREAD_ID, "videoData", query);
     dispatch({ type: ACTIONS.SET_LOCK_ADDRESS, payload: video[0].lockAddress });
-    dispatch({ type: ACTIONS.SET_VIDEO, payload: video[0] });    
-    init();
+    dispatch({ type: ACTIONS.SET_VIDEO, payload: video[0] });   
+    console.log(state); 
     setIsPageLoading(false);
   }
 
   const init = async () => {
-    console.log(state);
     setIsSuperFluidIsLoading(true);
     web3 = new Web3(window.ethereum);
 
@@ -86,7 +91,7 @@ export default function HomeScreen({ currentAccount }) {
     });
 
     await sf.initialize();
-
+    console.log(web3);
     LockContract = new web3.eth.Contract(publicLockABI, state.video.lockAddress);
 
     await subscribeToLockEvents();
@@ -95,7 +100,7 @@ export default function HomeScreen({ currentAccount }) {
   }
 
   const subscribeToLockEvents = async () => {
-
+    console.log(currentAccount);
     LockContract.events.Transfer({filter: {to: currentAccount}, fromBlock: 0}, (e) => {
     })
     .on("connected", (subscriptionId) => {
@@ -106,7 +111,7 @@ export default function HomeScreen({ currentAccount }) {
       setIsLocked(false);
     })
 
-    LockContract.events.CancelKey({filter: {to: currentAccount}, fromBlock: 0}, (e) => {
+    LockContract.events.CancelKey({filter: {owner: currentAccount}, fromBlock: 0}, (e) => {
     })
     .on("connected", (subscriptionId) => {
       console.log(subscriptionId);
@@ -126,6 +131,7 @@ export default function HomeScreen({ currentAccount }) {
   const startFlow = async (flowRate) => {
     setIsStartingFlow(true);
     const carol = sf.user({address: process.env.REACT_APP_SUPERAPP_ADDRESS, token: sf.tokens.fUSDCx.address});
+    console.log(state.video.lockAddress);
     const userData = await web3.eth.abi.encodeParameters(
       ["address"],
       [state.video.lockAddress]
@@ -133,10 +139,7 @@ export default function HomeScreen({ currentAccount }) {
     const tx = state.sender.flow({
       recipient: carol,
       flowRate,
-      userData,
-      onTranasction: hash => {
-        console.log(hash);
-      }
+      userData
     })
     .then(() => {
       setIsStartingFlow(false);

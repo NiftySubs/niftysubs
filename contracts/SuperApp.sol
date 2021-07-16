@@ -125,7 +125,7 @@ contract SuperApp is SuperAppBase {
                 "0x",
                 newCtx
             );
-        } else {
+        } else if(outFlowRate == int96(0)) {
       // @dev If there is no existing outflow, then create new flow to equal inflow
           (newCtx, ) = _host.callAgreementWithContext(
               _cfa,

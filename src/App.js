@@ -4,7 +4,6 @@ import Header from "./Components/Header";
 import { useState, useEffect, useCallback } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import theme from "./theme";
-import NetworkModal from "./Components/NetworkModal";
 import "@fontsource/inter";
 import Dashboard from './Pages/Dashboard';
 import Browse from './Pages/Browse';
@@ -21,6 +20,8 @@ import {
   Link,
   Button 
 } from "@chakra-ui/react";
+
+
 
 function App() {
 
