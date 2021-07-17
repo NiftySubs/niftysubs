@@ -186,26 +186,6 @@ function Browse() {
                   );
                 })
               }
-              <VStack alignItems="flex-start">
-                <Image width="300px" src="https://images.unsplash.com/photo-1549213821-4708d624e1d1?ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8MTYlM0E5fGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" />
-                <Text>Just Chating</Text>
-                </VStack>
-              <VStack alignItems="flex-start">
-                <Image width="300px" src="https://static-cdn.jtvnw.net/previews-ttv/live_user_eryctriceps-440x248.jpg" />
-                <Text>PRO CONTROLLER FORTNITE PRO - All Day Stream </Text>
-              </VStack>
-              <VStack alignItems="flex-start">
-                <Image width="300px" src="https://static-cdn.jtvnw.net/previews-ttv/live_user_symfuhny-440x248.jpg" />
-                <Text>INSANE HIGH KILL WINS + NEW KEYBOARD JUST DROPPED!!! | !Keyboard</Text>
-              </VStack>
-              <VStack alignItems="flex-start">
-                <Image width="300px" src="https://static-cdn.jtvnw.net/previews-ttv/live_user_kyle-440x248.jpg" />
-                <Text>Sports Radio 104.3 The Fan LIVE | "Denver’s Sports Station"</Text>
-              </VStack>
-              <VStack alignItems="flex-start">
-                <Image width="300px" src="https://static-cdn.jtvnw.net/previews-ttv/live_user_impactwrestling-440x248.jpg" />
-                <Text>IMPACT Wrestling on Twitch! Classic Wrestling Events 24/7/365</Text>
-              </VStack>
             </Grid>
           }
         </VStack>

@@ -27,7 +27,7 @@ var pubsub;
 var web3;
 var SuperChatContract;
 
-function ChatInterface({ currentAccount, isLocked, pubsubTopic }) {
+function ChatInterface({ currentAccount, isLocked, pubsubTopic, creatorAccount }) {
     const toast = useToast();
     const [ isConnectingToDatabase, setIsConnectingToDatabase ] = useState(false);
     const [ isStreaming, setIsStreaming ] = useState(false);
@@ -102,7 +102,7 @@ function ChatInterface({ currentAccount, isLocked, pubsubTopic }) {
             setIsSuperChatting(true);
             console.log(superChatValue);
             let weiAmount = web3.utils.toWei(superChatValue, "ether");
-            SuperChatContract.methods.superChat("0x22b2DD2CFEF2018D15543c484aceF6D9B5435863", weiAmount, message, uuidv4()).send({ from: currentAccount, value: weiAmount })
+            SuperChatContract.methods.superChat(creatorAccount, weiAmount, message, uuidv4()).send({ from: currentAccount, value: weiAmount })
             .on("transactionHash", (hash) => {
                 console.log(hash);
                 sendSuperChatMessage(message, superChatValue);

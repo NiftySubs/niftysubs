@@ -14,7 +14,7 @@ import svgAvatarGenerator from "../utils/avatar";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
 
-function Header({ currentAccountSetter, currentAccount }) {
+function Header({ currentAccount }) {
 
   const [ isLoading, setIsLoading ] = useState(false);
   const [ avatar, setAvatar ] = useState(undefined);
@@ -25,9 +25,6 @@ function Header({ currentAccountSetter, currentAccount }) {
       setIsMetamaskInstalled(true);  
       let svg = svgAvatarGenerator(currentAccount, {dataUri: true});
       setAvatar(svg);
-      window.ethereum.on("accountsChanged", (accounts) => {
-        currentAccountSetter(accounts[0]);
-      })
       // const web3 = new Web3(window.ethereum);
       // window.ethereum.on("chainChanged", async (chainId) => {
       //   const newChainId = await web3.eth.getChainId();
@@ -39,13 +36,6 @@ function Header({ currentAccountSetter, currentAccount }) {
   }, [currentAccount])
 
   
-
-  const getCurrentAccount = async () => {
-    setIsLoading(true);
-    const accounts = await window.ethereum.request({ method: "eth_requestAccounts"});
-    currentAccountSetter(accounts[0]);
-    setIsLoading(false);
-  }
 
   return (
     <HStack padding={3} className="Header">
@@ -71,7 +61,7 @@ function Header({ currentAccountSetter, currentAccount }) {
             <Avatar borderStyle="solid" borderColor="#E6017A" borderWidth="2px" padding="1px" mr="-13px" ml={4} size="sm" bg="transparent" src={avatar} />
           </Tag>
           :
-          <Button isLoading={isLoading} onClick={getCurrentAccount} alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Connect Wallet</Button>
+          <Tag alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Connect Wallet</Tag>
           :
           <Button isLoading={isLoading} alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Install Metamask</Button>
         }
