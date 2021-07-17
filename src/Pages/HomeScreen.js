@@ -1,6 +1,6 @@
 import "./HomeScreen.css";
 import c2c from "../assets/c2caftermovie.mp4";
-import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text, Avatar, Skeleton, SkeletonCircle, Stack, Spinner } from "@chakra-ui/react";
+import { Button, Heading, VStack, HStack, Box, Flex, Spacer, Image, Tag, Text, Avatar, Skeleton, SkeletonCircle, Stack, Spinner, interactivity } from "@chakra-ui/react";
 import ChatInterface from "../Components/ChatInterface.js";
 import { useState, useEffect, useReducer } from "react";
 import publicLockABI from "../abis/publicLock";
@@ -22,7 +22,8 @@ const ACTIONS = {
   SET_LOCK_ADDRESS: 'set-lock-address',
   SET_BLOCK_NUMBER: 'set-block-number',
   SET_SENDER: 'set-sender',
-  SET_VIDEO: 'set-video'
+  SET_VIDEO: 'set-video',
+  SET_IS_LOCKED: 'set-is-locked'
 }
 
 function stateReducer(state, action) {
@@ -35,6 +36,8 @@ function stateReducer(state, action) {
       return { ...state, sender: action.payload };
     case ACTIONS.SET_VIDEO:
       return { ...state, video: action.payload };
+    case ACTIONS.SET_IS_LOCKED:
+      return { ...state, isLocked: action.payload };
     default:
       return state;
   }
@@ -43,13 +46,12 @@ function stateReducer(state, action) {
 export default function HomeScreen({ currentAccount }) {
 
   const toast = useToast();
-  const [ isLocked, setIsLocked ] = useState(true);
   const [ isStartingFlow, setIsStartingFlow ] = useState(false);
   const [ isPageLoading, setIsPageLoading ] = useState(true);
   const { id } = useParams(); 
   const [ isSuperFluidLoading, setIsSuperFluidIsLoading ] = useState(false);
 
-  const [ state, dispatch ] = useReducer(stateReducer, { lockAddress: "", sender: "", video: {} });
+  const [ state, dispatch ] = useReducer(stateReducer, { lockAddress: "", sender: "", video: {}, isLocked: true });
 
   useEffect(() => {
     // loading the fundraising widget.
@@ -62,26 +64,26 @@ export default function HomeScreen({ currentAccount }) {
     }
     loadScript("https://niftysubs.github.io/fundraising-widget/main.js");
     
-
-    getVideoData();
   }, []);
 
   useEffect(() => {
     if(currentAccount)
-      init();
+      getVideoData();
   }, [currentAccount])
+
 
   const getVideoData = async () => {
     let client = await getClient();
     let query = new Where("videoId").eq(id);
     let video = await queryThread(client, process.env.REACT_APP_TEXTILE_THREAD_ID, "videoData", query);
-    dispatch({ type: ACTIONS.SET_LOCK_ADDRESS, payload: video[0].lockAddress });
-    dispatch({ type: ACTIONS.SET_VIDEO, payload: video[0] });   
-    console.log(state); 
-    setIsPageLoading(false);
+    let lockAddress = video[0].lockAddress;
+    dispatch({ type: ACTIONS.SET_LOCK_ADDRESS, payload: lockAddress });
+    dispatch({ type: ACTIONS.SET_VIDEO, payload: video[0] });
+    init(lockAddress);
   }
 
-  const init = async () => {
+
+  const init = async (lockAddress) => {
     setIsSuperFluidIsLoading(true);
     web3 = new Web3(window.ethereum);
 
@@ -92,7 +94,12 @@ export default function HomeScreen({ currentAccount }) {
 
     await sf.initialize();
     console.log(web3);
-    LockContract = new web3.eth.Contract(publicLockABI, state.video.lockAddress);
+    
+    LockContract = new web3.eth.Contract(publicLockABI, lockAddress);
+    let shouldContentBeLocked = await LockContract.methods.getHasValidKey(currentAccount);
+    dispatch({ type: ACTIONS.SET_IS_LOCKED, payload: shouldContentBeLocked });
+
+    console.log(state.video.lockAddress);
 
     await subscribeToLockEvents();
 
@@ -108,7 +115,7 @@ export default function HomeScreen({ currentAccount }) {
     })
     .on("data", (e) => {
       console.log("Key Granted");
-      setIsLocked(false);
+      dispatch({ type: ACTIONS.SET_IS_LOCKED, payload: false });
     })
 
     LockContract.events.CancelKey({filter: {owner: currentAccount}, fromBlock: 0}, (e) => {
@@ -118,7 +125,7 @@ export default function HomeScreen({ currentAccount }) {
     })
     .on("data", (e) => {
       console.log("Key Cancelled!");
-      setIsLocked(true);
+      dispatch({ type: ACTIONS.SET_IS_LOCKED, payload: true });
     })
   }
 
@@ -126,6 +133,7 @@ export default function HomeScreen({ currentAccount }) {
     const bob = sf.user({address: currentAccount, token: sf.tokens.fUSDCx.address});
     dispatch({ type: ACTIONS.SET_SENDER, payload: bob });
     setIsSuperFluidIsLoading(false);
+    setIsPageLoading(false); 
   }
 
   const startFlow = async (flowRate) => {
@@ -200,7 +208,7 @@ export default function HomeScreen({ currentAccount }) {
             <div className="window__frame__image">
                 <Skeleton isLoaded={!isPageLoading}>
                   {
-                    isLocked ? 
+                    state.isLocked ? 
                     <VStack height="65vh" alignItems="center" justifyContent="center">
                       {
                         currentAccount && !isSuperFluidLoading ? 
@@ -214,11 +222,12 @@ export default function HomeScreen({ currentAccount }) {
                       }
                     </VStack>
                     : 
-                    <video
+                    <iframe
                       className="video-border"
-                      autoplay="true"
-                      src="../assets/c2caftermovie.mp4"
-                      // src={`https://embed.voodfy.com/${state.video.videoId}`}
+                      // autoplay="true"
+                      // src="../assets/c2caftermovie.mp4"
+                      style={{height: "70vh"}}
+                      src={`https://embed.voodfy.com/${state.video.videoId}`}
                       width="100%"
                       controls
                     />
@@ -266,7 +275,7 @@ export default function HomeScreen({ currentAccount }) {
                 <Spacer/>
                 <HStack alignItems="center" justifyContent="center" justifyItems="center" justifySelf="center" alignSelf="center" alignContent="center">
                   {
-                    isLocked ? 
+                    state.isLocked ? 
                     <Spacer />
                     :
                     <Button isLoading={isStartingFlow} onClick={() => startFlow("0")} className="subscribebutton" backgroundColor="black"  color="white" leftIcon={<Image filter="invert(1)" backgroundColor="transparent" borderRadius="2px" width="20px" height="20px" src="https://gblobscdn.gitbook.com/spaces%2F-MKEcOOf_qoYMObicyRu%2Favatar-1603361891616.png?alt=media" />}>Stop Watching</Button>
@@ -282,7 +291,7 @@ export default function HomeScreen({ currentAccount }) {
             isPageLoading ?
             <Tag>Loading</Tag>
             :
-            <ChatInterface pubsubTopic={state.video.videoId} isLocked={isLocked} creatorAccount={state.video.currentAccount} currentAccount={currentAccount} /> 
+            <ChatInterface pubsubTopic={state.video.videoId} isLocked={state.isLocked} creatorAccount={state.video.currentAccount} currentAccount={currentAccount} /> 
           }
         </HStack>
       </HStack>

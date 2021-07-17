@@ -27,11 +27,23 @@ function App() {
 
   const [currentAccount, setCurrentAccount] = useState(undefined);
   const [ chainId, setChainId ] = useState();
+  const [ isLoading, setIsLoading ] = useState(false);
 
+  const getCurrentAccount = async () => {
+    setIsLoading(true);
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts"});
+    setCurrentAccount(accounts[0]);
+    setIsLoading(false);
+  }
 
   useEffect(() => {
     if(window.ethereum && currentAccount){
       setChainId(window.ethereum.networkVersion);
+      
+      window.ethereum.on("accountsChanged", (accounts) => {
+        setCurrentAccount(accounts[0]);
+      })
+
       window.ethereum.on("chainChanged", (newChainId) => {
         setChainId(newChainId.substr(-1, 1));
       })
@@ -43,7 +55,7 @@ function App() {
     <>
       <ChakraProvider theme={theme}>
         <Router>
-          <Header currentAccountSetter={setCurrentAccount} currentAccount={currentAccount} />
+          <Header currentAccount={currentAccount} />
           {
             window.ethereum == undefined ?
             <Modal
@@ -78,6 +90,24 @@ function App() {
             :
             <>
               {
+                currentAccount == undefined ?
+                <Modal
+                  isOpen={true}
+                  isCentered={true}
+                  closeModalOnOverlayClick={false}
+                >
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader textAlign="center">Connect Wallet to continue</ModalHeader>
+                    <ModalFooter justifyContent="center">
+                        <Button onClick={getCurrentAccount} isLoading={isLoading} colorScheme="pink" mr={3}>
+                            Connect Wallet
+                        </Button>                      
+                    </ModalFooter>
+                  </ModalContent>
+                  
+                </Modal>
+                :
                 chainId == "4" || chainId == undefined ?
                 null
                 :
