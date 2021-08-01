@@ -30,7 +30,6 @@ import {
     Td,
     useToast
 } from "@chakra-ui/react";
-import { create } from "ipfs-http-client";
 import { useEffect, useState, useCallback, useReducer } from "react";
 import axios from "axios";
 import { RiCheckboxCircleFill } from "react-icons/ri";
@@ -150,9 +149,6 @@ function Streams({ currentAccount }) {
             setStreamKey(streamKey);
             console.log(response);
             setLoadingText("Creating Lock");
-            // await addDataToDatabase(videoId, streamTitle, streamDescription, posterUrl, currentAccount, streamUrl, "");
-            // setAfterStreamCreated(true);
-            // setCreatingStream(false);
             createLock(videoId);
         })
         .catch((error) => {
@@ -169,7 +165,7 @@ function Streams({ currentAccount }) {
 
     const createLock = async (videoId) => {
         unlockContract.methods.createLock(
-            "2153999999",
+            "3152604000", // this is not 100 years fix this!
             "0x0000000000000000000000000000000000000000",
             "1000000000000000000000000000000000000000000",
             "0",

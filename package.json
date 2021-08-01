@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chainlink/contracts": "^0.2.1",
     "@chakra-ui/react": "^1.6.4",
     "@dicebear/avatars": "^4.6.9",
     "@dicebear/micah": "^4.6.9",

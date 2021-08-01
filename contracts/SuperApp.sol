@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 
@@ -80,66 +80,124 @@ contract SuperApp is SuperAppBase {
         _host.registerApp(configWord);
     }
 
-    function _updateOutflow(bytes calldata ctx, address lockAddress, address flowSender)
+    function _updateOutflow(bytes calldata ctx, address lockAddress, address flowSender, bool isCreated)
         private
         returns (bytes memory newCtx)
     {
       newCtx = ctx;
       
       // @dev This will give me the new flowRate, as it is called in after callbacks
-      int96 netFlowRate = _cfa.getNetFlow(_acceptedToken, address(this));
+     //   int96 netFlowRate = _cfa.getNetFlow(_acceptedToken, address(this));
 
     //   address lockAddress = abi.decode(_host.decodeCtx(ctx).userData, (address));
       address _receiver = IPublicLock(lockAddress).beneficiary();
       
       (,int96 outFlowRate,,) = _cfa.getFlow(_acceptedToken, address(this), _receiver);
-      int96 inFlowRate = netFlowRate + outFlowRate;
-      if (inFlowRate < 0) inFlowRate = -inFlowRate; // Fixes issue when inFlowRate is negative
-
+      (,int96 inFlowRate,,) = _cfa.getFlow(_acceptedToken, flowSender, address(this));
+    //   if (inFlowRate < 0) inFlowRate = -inFlowRate; // Fixes issue when inFlowRate is negative
+      int96 updatedOutFlowRate = outFlowRate - _requiredFlowRate; 
       // @dev If inFlowRate === 0, then delete existing flow.
-      if (inFlowRate == int96(0)) {
-        // @dev if inFlowRate is zero, delete outflow.
-        (newCtx, ) = _host.callAgreementWithContext(
-            _cfa,
-            abi.encodeWithSelector(
-                _cfa.deleteFlow.selector,
-                _acceptedToken,
-                address(this),
-                _receiver,
-                new bytes(0) // placeholder
-            ),
-            "0x",
-            newCtx
-        );
-        userToLockMapping[flowSender] = address(0);
-       } else if (outFlowRate != int96(0)){
-            (newCtx, ) = _host.callAgreementWithContext(
+      if(isCreated == true) {
+          if(outFlowRate > 0) {
+              (newCtx, ) = _host.callAgreementWithContext(
                 _cfa,
                 abi.encodeWithSelector(
                     _cfa.updateFlow.selector,
                     _acceptedToken,
                     _receiver,
-                    inFlowRate,
+                    outFlowRate + _requiredFlowRate,
                     new bytes(0) // placeholder
                 ),
                 "0x",
                 newCtx
             );
-        } else if(outFlowRate == int96(0)) {
-      // @dev If there is no existing outflow, then create new flow to equal inflow
-          (newCtx, ) = _host.callAgreementWithContext(
+          } else {
+            (newCtx, ) = _host.callAgreementWithContext(
               _cfa,
               abi.encodeWithSelector(
                   _cfa.createFlow.selector,
                   _acceptedToken,
                   _receiver,
-                  inFlowRate,
+                  _requiredFlowRate,
                   new bytes(0) // placeholder
               ),
               "0x",
               newCtx
-          );
-        }
+            );    
+          }
+      } else {
+          if(updatedOutFlowRate == 0) {
+            (newCtx, ) = _host.callAgreementWithContext(
+                _cfa,
+                abi.encodeWithSelector(
+                    _cfa.deleteFlow.selector,
+                    _acceptedToken,
+                    address(this),
+                    _receiver,
+                    new bytes(0) // placeholder
+                ),
+                "0x",
+                newCtx
+            );    
+          } else {
+              (newCtx, ) = _host.callAgreementWithContext(
+                _cfa,
+                abi.encodeWithSelector(
+                    _cfa.updateFlow.selector,
+                    _acceptedToken,
+                    _receiver,
+                    updatedOutFlowRate,
+                    new bytes(0) // placeholder
+                ),
+                "0x",
+                newCtx
+            );
+          }
+          userToLockMapping[flowSender] = address(0);
+      }
+    //   if (inFlowRate == int96(0)) {
+    //     // @dev if inFlowRate is zero, delete outflow.
+    //     (newCtx, ) = _host.callAgreementWithContext(
+    //         _cfa,
+    //         abi.encodeWithSelector(
+    //             _cfa.deleteFlow.selector,
+    //             _acceptedToken,
+    //             address(this),
+    //             _receiver,
+    //             new bytes(0) // placeholder
+    //         ),
+    //         "0x",
+    //         newCtx
+    //     );
+    //     userToLockMapping[flowSender] = address(0);
+    //   } else if (outFlowRate != int96(0)){
+    //         (newCtx, ) = _host.callAgreementWithContext(
+    //             _cfa,
+    //             abi.encodeWithSelector(
+    //                 _cfa.updateFlow.selector,
+    //                 _acceptedToken,
+    //                 _receiver,
+    //                 inFlowRate,
+    //                 new bytes(0) // placeholder
+    //             ),
+    //             "0x",
+    //             newCtx
+    //         );
+    //     } else {
+    //   // @dev If there is no existing outflow, then create new flow to equal inflow
+    //       (newCtx, ) = _host.callAgreementWithContext(
+    //           _cfa,
+    //           abi.encodeWithSelector(
+    //               _cfa.createFlow.selector,
+    //               _acceptedToken,
+    //               _receiver,
+    //               inFlowRate,
+    //               new bytes(0) // placeholder
+    //           ),
+    //           "0x",
+    //           newCtx
+    //       );
+    //     }
     }
     
     function afterAgreementCreated(
@@ -176,7 +234,7 @@ contract SuperApp is SuperAppBase {
         
         // update the mapping so that we can keep track of current content lock.
         userToLockMapping[flowSender] = lockAddress;
-        return _updateOutflow(_ctx, userToLockMapping[flowSender], flowSender);
+        return _updateOutflow(_ctx, userToLockMapping[flowSender], flowSender, true);
     }
     
     function afterAgreementUpdated(
@@ -273,7 +331,7 @@ contract SuperApp is SuperAppBase {
             IPublicLock lock = IPublicLock(lockAddress);
             lock.expireAndRefundFor(flowSender, 0);
         }
-        return _updateOutflow(_ctx, userToLockMapping[flowSender], flowSender);
+        return _updateOutflow(_ctx, userToLockMapping[flowSender], flowSender, false);
     }
     
     function _isSameToken(ISuperToken superToken) private view returns (bool) {

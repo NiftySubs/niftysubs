@@ -99,8 +99,6 @@ export default function HomeScreen({ currentAccount }) {
     let shouldContentBeLocked = await LockContract.methods.getHasValidKey(currentAccount);
     dispatch({ type: ACTIONS.SET_IS_LOCKED, payload: shouldContentBeLocked });
 
-    console.log(state.video.lockAddress);
-
     await subscribeToLockEvents();
 
     changeFlowSender(currentAccount);
@@ -138,6 +136,7 @@ export default function HomeScreen({ currentAccount }) {
 
   const startFlow = async (flowRate) => {
     setIsStartingFlow(true);
+    console.log(state.video.lockAddress);
     const carol = sf.user({address: process.env.REACT_APP_SUPERAPP_ADDRESS, token: sf.tokens.fUSDCx.address});
     console.log(state.video.lockAddress);
     const userData = await web3.eth.abi.encodeParameters(
