@@ -18,12 +18,15 @@ import {
   ModalHeader,
   Link,
   Button,
+  useColorMode,
+  useColorModeValue
 } from '@chakra-ui/react'
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState(undefined)
   const [chainId, setChainId] = useState()
   const [isLoading, setIsLoading] = useState(false)
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const getCurrentAccount = async () => {
     setIsLoading(true)
@@ -52,7 +55,7 @@ function App() {
     <>
       <ChakraProvider theme={theme}>
         <Router>
-          <Header currentAccount={currentAccount} />
+          <Header currentAccount={currentAccount} toggleColorMode={toggleColorMode} />
           {window.ethereum == undefined ? (
             <Modal
               isOpen={true}
@@ -92,7 +95,7 @@ function App() {
             </Modal>
           ) : (
             <>
-              {currentAccount == undefined ? (
+              {currentAccount === undefined ? (
                 <Modal
                   isOpen={true}
                   isCentered={true}

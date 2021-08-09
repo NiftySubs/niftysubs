@@ -157,9 +157,9 @@ function Browse() {
           </HStack>
         </VStack>
         <div className="showmore">Show More</div>
-        <VStack spacing={3} className="joincard">
-          <Heading className="cardtitle">
-            Join the <span className="titlecardhighlight">niftysubs</span>{' '}
+        <VStack bg="gray.50" spacing={3} className="joincard">
+          <Heading color="black" className="cardtitle">
+            Join the <span className="titlecardhighlight">niftysubs</span>{" "}
             community!
           </Heading>
           <Heading as="h5" fontSize={13} className="cardsubtitle">
@@ -201,13 +201,13 @@ function Browse() {
                     </HStack>
                   </VStack>
                 </Link>
-              )
+              );
             })}
           </Grid>
         )}
       </VStack>
     </HStack>
-  )
+  );
 }
 
 export default withRouter(Browse)

@@ -231,12 +231,17 @@ export default function HomeScreen({ currentAccount }) {
             </HStack>
           </VStack>
           <div className="showmore">Show More</div>
-          <VStack spacing={3} className="joincard">
-            <Heading className="cardtitle">
-              Join the <span className="titlecardhighlight">niftysubs</span>{' '}
+          <VStack bg="gray.50" spacing={3} className="joincard">
+            <Heading color="black" className="cardtitle">
+              Join the <span className="titlecardhighlight">niftysubs</span>{" "}
               community!
             </Heading>
-            <Heading as="h5" fontSize={13} className="cardsubtitle">
+            <Heading
+              as="h5"
+              color="black"
+              fontSize={13}
+              className="cardsubtitle"
+            >
               Discover the best live streams anywhere.
             </Heading>
             {/* <Button alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Connect Wallet</Button> */}
@@ -264,7 +269,7 @@ export default function HomeScreen({ currentAccount }) {
                         <Heading>10 USDC / Month</Heading>
                         <Button
                           isLoading={isStartingFlow}
-                          onClick={() => startFlow('3858024691358')}
+                          onClick={() => startFlow("3858024691358")}
                           className="subscribebutton"
                           backgroundColor="black"
                           color="white"
@@ -296,7 +301,7 @@ export default function HomeScreen({ currentAccount }) {
                     className="video-border"
                     // autoplay="true"
                     // src="../assets/c2caftermovie.mp4"
-                    style={{ height: '70vh' }}
+                    style={{ height: "70vh" }}
                     src={`https://embed.voodfy.com/${state.video.videoId}`}
                     width="100%"
                     controls
@@ -381,7 +386,7 @@ export default function HomeScreen({ currentAccount }) {
                   ) : (
                     <Button
                       isLoading={isStartingFlow}
-                      onClick={() => startFlow('0')}
+                      onClick={() => startFlow("0")}
                       className="subscribebutton"
                       backgroundColor="black"
                       color="white"
@@ -423,5 +428,5 @@ export default function HomeScreen({ currentAccount }) {
         </HStack>
       </HStack>
     </div>
-  )
+  );
 }
