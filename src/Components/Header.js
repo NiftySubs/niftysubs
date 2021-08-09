@@ -43,7 +43,7 @@ function Header({ currentAccount }) {
         <Button variant="ghost">Dashboard</Button>
       </Link>
       <Button size="sm" bg={bg} color={color} onClick={toggleColorMode}>
-        Toggle Mode
+        {colorMode === "light" ? "Dark" : "Light"}
       </Button>
       <div className="headercomp">
         {isMetamaskInstalled ? (

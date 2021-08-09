@@ -231,21 +231,27 @@ export default function HomeScreen({ currentAccount }) {
             </HStack>
           </VStack>
           <div className="showmore">Show More</div>
-          <VStack bg="gray.50" spacing={3} className="joincard">
-            <Heading color="black" className="cardtitle">
+          <Tag
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={3}
+            className="joincard"
+          >
+            <Heading textAlign="center" color="black" className="cardtitle">
               Join the <span className="titlecardhighlight">niftysubs</span>{" "}
               community!
             </Heading>
             <Heading
+              textAlign="center"
               as="h5"
-              color="black"
               fontSize={13}
               className="cardsubtitle"
             >
               Discover the best live streams anywhere.
             </Heading>
             {/* <Button alignSelf="flex-start" color="#E6017A" backgroundColor="rgba(230,1,122,0.08)">Connect Wallet</Button> */}
-          </VStack>
+          </Tag>
         </section>
         <HStack
           width="80vw"
