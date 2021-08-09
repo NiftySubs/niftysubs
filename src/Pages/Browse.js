@@ -204,10 +204,13 @@ function Browse() {
                       />
                       <VStack alignItems="flex-start" spacing={2}>
                         <Text fontSize="13px">{stream.streamTitle}</Text>
-                        <Tag fontSize="12px">{`${stream.currentAccount.substr(
-                          0,
-                          6
-                        )}...${stream.currentAccount.substr(-4)}`}</Tag>
+                        <HStack alignItems="flex-start">
+                          <Tag fontSize="12px">{`${stream.currentAccount.substr(
+                            0,
+                            6
+                          )}...${stream.currentAccount.substr(-4)}`}</Tag>
+                          <Tag fontSize="10px">1,812 viewers</Tag>
+                        </HStack>
                       </VStack>
                     </HStack>
                   </VStack>
