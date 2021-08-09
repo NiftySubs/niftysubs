@@ -1,6 +1,6 @@
 import './Components.css'
 import niftysubs from '../assets/niftysubs.svg'
-import { Button, HStack, Tag, TagLabel, Avatar, Spacer } from '@chakra-ui/react'
+import { Button, HStack, Tag, TagLabel, Avatar, Spacer,  useColorMode, useColorModeValue } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import svgAvatarGenerator from '../utils/avatar'
 import { Link } from 'react-router-dom'
@@ -9,7 +9,9 @@ function Header({ currentAccount }) {
   const [isLoading, setIsLoading] = useState(false)
   const [avatar, setAvatar] = useState(undefined)
   const [isMetamaskInstalled, setIsMetamaskInstalled] = useState(false)
-
+  const { colorMode, toggleColorMode } = useColorMode();
+  const bg = useColorModeValue("red.500", "red.200");
+  const color = useColorModeValue("white", "gray.800");
   useEffect(() => {
     if (window.ethereum) {
       setIsMetamaskInstalled(true)
@@ -40,6 +42,9 @@ function Header({ currentAccount }) {
       <Link to="/dashboard">
         <Button variant="ghost">Dashboard</Button>
       </Link>
+      <Button size="sm" bg={bg} color={color} onClick={toggleColorMode}>
+        Toggle Mode
+      </Button>
       <div className="headercomp">
         {isMetamaskInstalled ? (
           currentAccount ? (
@@ -88,7 +93,7 @@ function Header({ currentAccount }) {
         )}
       </div>
     </HStack>
-  )
+  );
 }
 
 export default Header

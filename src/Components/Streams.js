@@ -184,7 +184,7 @@ function Streams({ currentAccount }) {
         '1000000000000000000000000000000000000000000',
         '0',
         'lockforvideo',
-        web3.utils.asciiToHex(uuidv4()).toString().substr(0, 25)
+        web3.utils.asciiToHex(uuidv4())?.toString().substr(0, 25)
       )
       .send({ from: currentAccount })
       .then(async (receipt) => {

@@ -1,6 +1,6 @@
 import { create } from "ipfs-http-client";
 import OrbitDB from "orbit-db";
-const auth = 'Basic ' + Buffer.from(process.env.REACT_APP_IPFS_PROJECT_ID + ':' + process.env.REACT_APP_IPFS_PROJECT_SECRET).toString('base64')
+const auth = 'Basic ' + Buffer.from(process.env.REACT_APP_IPFS_PROJECT_ID + ':' + process.env.REACT_APP_IPFS_PROJECT_SECRET)?.toString('base64')
 
 const ipfsOptions = {
     EXPERIMENTAL: {
