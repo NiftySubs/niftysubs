@@ -256,7 +256,6 @@ export default function HomeScreen({ currentAccount }) {
         <HStack
           width="80vw"
           alignItems="flex-start"
-          backgroundColor="#EFEFF1"
           height="100%"
           className="mainsection"
         >

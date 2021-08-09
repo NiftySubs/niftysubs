@@ -169,9 +169,9 @@
 .subscribebutton:hover{
     background: black !important;
 }
-.videosection{
+/* .videosection{
     background-color: #F7F7F8;
-}
+} */
 .creatordetails{
     display: flex;
     background-color: rgb(158, 158, 158);

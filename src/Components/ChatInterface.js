@@ -157,7 +157,6 @@ function ChatInterface({
       margin={0}
       spacing={4}
       height="calc(100vh - 65px)"
-      backgroundColor="white"
       padding={3}
       alignItems="flex-start"
       width="20vw"
